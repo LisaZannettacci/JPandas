@@ -64,6 +64,12 @@ mvn javadoc:javadoc
 ```
 Elle sera disponible dans `target/site/apidocs`.
 
+Vous trouverez la documentation en ligne à l'adresse suivante:
+
+```
+https://lisazannettacci.github.io/JPandas/
+````
+
 ## Description des choix que nous avons fait:
 
 ## Description du workflow mis en place
