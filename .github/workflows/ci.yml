@@ -54,11 +54,11 @@ jobs:
 
       - name: Set up GitHub Token
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.BOT_TOKEN }}
         run: |
           git config --global user.name "LisaZannettacci"
           git config --global user.email "lisa38570@gmail.com"
-          git remote set-url origin https://${{ secrets.GITHUB_TOKEN }}@github.com/LisaZannettacci/JPandas.git
+          git remote set-url origin https://x-access-token:${{ secrets.BOT_TOKEN }}@github.com/LisaZannettacci/JPandas.git
 
       - name: Download Javadoc Artifact
         uses: actions/download-artifact@v4
