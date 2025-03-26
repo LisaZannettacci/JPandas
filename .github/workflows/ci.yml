@@ -49,6 +49,16 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false  # Empêche de garder les credentials dans le cache pour plus de sécurité
+
+      - name: Set up GitHub Token
+        env:
+          GITHUB_TOKEN: ${{ secrets.BOT_TOKEN }}
+        run: |
+          git config --global user.name "LisaZannettacci"
+          git config --global user.email "lisa38570@gmail.com"
+          git remote set-url origin https://BOT_TOKEN:${{ secrets.BOT_TOKEN }}@github.com/LisaZannettacci/JPandas.git  # Utilisation du token pour l'authentification
 
       - name: Download Javadoc Artifact
         uses: actions/download-artifact@v4
@@ -60,5 +70,4 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
-          folder: javadoc  # Mettre le même dossier que celui défini au-dessus
-
+          folder: javadoc  # Mettre le même dossier que celui défini ci-dessus
