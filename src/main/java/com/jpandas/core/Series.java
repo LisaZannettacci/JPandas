@@ -39,4 +39,8 @@ public class Series<T> {
         for (T value: data)
         System.out.println(value);
     }
+
+    public int size() {
+        return data.size();
+    }
 }
