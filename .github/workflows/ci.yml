@@ -4,71 +4,70 @@ on:
   push:
     branches:
       - main
+      - fix_ci
   pull_request:
     branches:
       - main
 
 jobs:
-    # Le job build-and-test s'exécute sur un serveur u=Ubuntu (serveur GitHub hosted Ubuntu)
   build-and-test:
     runs-on: ubuntu-latest
-
     steps:
-        # Télécharger le code source
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-        # Installation de Java
       - name: Set up JDK 17
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
 
-        # Compile le projet
       - name: Build with Maven
         run: mvn clean package
 
-        # Lance les tests unitaires via Jacoco
       - name: Run Tests with JaCoCo
         run: mvn verify
 
-        # Sauvegarde le rapport Jacoco
       - name: Upload JaCoCo Report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: jacoco-report
           path: target/site/jacoco
 
-        # Génération de la doc
       - name: Generate Javadoc
         run: mvn javadoc:javadoc
 
-        # La documentation est sauvegardée dans le fichier apidocs
       - name: Upload Javadoc
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: javadoc
           path: target/site/apidocs
 
   deploy-javadoc:
-    needs: build-and-test  # Exécuter ce job seulement après la réussite des tests
+    needs: build-and-test
     runs-on: ubuntu-latest
-
     steps:
-        # Télécharge la doc généré précedemment
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false  # Empêche de garder les credentials dans le cache pour plus de sécurité
+
+      - name: Set up GitHub Token
+        env:
+          GITHUB_TOKEN: ${{ secrets.BOT_TOKEN }}
+        run: |
+          git config --global user.name "LisaZannettacci"
+          git config --global user.email "lisa38570@gmail.com"
+          git remote set-url origin https://x-access-token:${{ secrets.BOT_TOKEN }}@github.com/LisaZannettacci/JPandas.git
 
       - name: Download Javadoc Artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: javadoc
-          path: target/site/apidocs
-        
-        # Envoie la Javadoc vers GitHub Pages pour qu'elle soit accessible en ligne
+          path: javadoc  # Mettre un dossier temporaire pour éviter des conflits avec `target/site/apidocs`
+
       - name: Deploy Javadoc to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
-          folder: target/site/apidocs
+          folder: javadoc  # Mettre le même dossier que celui défini ci-dessus
