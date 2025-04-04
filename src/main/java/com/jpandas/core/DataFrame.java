@@ -74,10 +74,11 @@ public class DataFrame {
      * @param nb le nombre de lignes que l'on veut afficher
      * @param mode le mode d'affichage
      */
-    private void afficherLignes(int nb, int mode) {
+    private String afficherLignes(int nb, int mode) {
         Set<String> cles = colonne.keySet();
         HashMap<String, Integer> largeursColonnes = new HashMap<>();
         List<String> listeCles = new ArrayList<String>();
+        String chaine = "";
 
         //pour determiner le format de l'affichage, on cherche la taille max dans chaque colonne
         for (String cle : cles) {
@@ -114,9 +115,11 @@ public class DataFrame {
 
         // Affichage des noms des colonnes
         for (String cle : listeCles) {
-            System.out.printf("%-" + largeursColonnes.get(cle) + "s", cle);
+            chaine += String.format("%-" + largeursColonnes.get(cle) + "s", cle);
+            // System.out.printf("%-" + largeursColonnes.get(cle) + "s", cle);
         }
-        System.out.println();
+        chaine += "\n";
+        // System.out.println();
         
         int tailleMot = 0;        
         String separateur = "";
@@ -125,26 +128,32 @@ public class DataFrame {
             for (int i = 0; i<tailleMot; i++){
                 separateur+="-";
             }
-            System.out.printf("%-" + largeursColonnes.get(cle) + "s", separateur);
+            chaine += String.format("%-" + largeursColonnes.get(cle) + "s", separateur);
+            // System.out.printf("%-" + largeursColonnes.get(cle) + "s", separateur);
             separateur = "";
         }
-        System.out.println();
+        chaine += "\n";
+        // System.out.println();
+        
 
         //Affichage des lignes
         for (int i = debut; i < debut+nbLignesAAfficher; i++){
             for (String cle : listeCles) {
                 String valeur = colonne.get(cle).getData().get(i).toString();
-                System.out.printf("%-" + largeursColonnes.get(cle) + "s", valeur);
+                chaine += String.format("%-" + largeursColonnes.get(cle) + "s", valeur);
+                // System.out.printf("%-" + largeursColonnes.get(cle) + "s", valeur);
             }
-            System.out.println();
+            chaine += "\n";
+            // System.out.println();
         }
+        return chaine;
     }
 
     /**
      * Methode qui affiche toutes les lignes du dataframe
      */
     public void afficherTout() {
-        afficherLignes(0, 0);
+        System.out.print(afficherLignes(0, 0));
     }
 
     /**
@@ -152,7 +161,7 @@ public class DataFrame {
      * @param nb le nombre de lignes que l'on veut afficher en partant du debut
      */
     public void afficherPremieresLignes(int nb) {
-        afficherLignes(nb, 1);
+        System.out.print(afficherLignes(nb, 1));
     }
 
     /**
@@ -160,6 +169,6 @@ public class DataFrame {
      * @param nb le nombre de lignes que l'on veut afficher en partant de la fin
      */
     public void afficherDernieresLignes(int nb) {
-        afficherLignes(nb, 2);
+        System.out.print(afficherLignes(nb, 2));
     }
 }
