@@ -67,10 +67,10 @@ public class DataFrame {
     }
 
     /**
-     * Methode pour afficher les lignes, avec differents modes possibles :
-     * mode 0 : afficher toutes les lignes (valeur de nb inutilisee)
-     * mode 1 : afficher les nb premieres lignes
-     * mode 2 : afficher les nb derniers lignes
+     * Methode pour renvoyer les lignes a afficher, avec differents modes possibles :
+     * mode 0 : toutes les lignes (valeur de nb inutilisee)
+     * mode 1 : les nb premieres lignes
+     * mode 2 : les nb derniers lignes
      * @param nb le nombre de lignes que l'on veut afficher
      * @param mode le mode d'affichage
      */
