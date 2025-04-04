@@ -12,17 +12,19 @@ import com.jpandas.core.Series;
 
 public class SeriesTest {
 
-    // @Test
-    // public void testSeriesVide() {
-    //     // Creation d'une nouvelle Series vide
-    //     Series<String> series = new Series<>();
-    //     assertTrue(series.getData().isEmpty());
-    // }
-
+    // On s'assure que la Series se complète correctement avec les bonnes données à la bonne place
     @Test
-    public void testAjouterDonnees() {
+    public void testGetData() {
         Series<String> series = new Series<>(Arrays.asList("A", "B", "C"));
-        assertEquals(3, series.getData().size());
         assertEquals("A", series.getData().get(0));
+        assertEquals("B", series.getData().get(1));
+        assertEquals("C", series.getData().get(2));
+    }
+
+    // On vérifie que la taille des series qui est renvoyée est correcte
+    @Test
+    public void testSize() {
+        Series<Integer> series = new Series<>(Arrays.asList(1, 2, 3, 4));
+        assertEquals(4, series.size());
     }
 }

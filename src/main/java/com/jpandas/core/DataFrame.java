@@ -116,7 +116,9 @@ public class DataFrame {
         for (String cle : listeCles) {
             System.out.printf("%-" + largeursColonnes.get(cle) + "s", cle);
         }
-        int tailleMot = 0;
+        System.out.println();
+        
+        int tailleMot = 0;        
         String separateur = "";
         for (String cle : listeCles) {
             tailleMot = cle.length();
