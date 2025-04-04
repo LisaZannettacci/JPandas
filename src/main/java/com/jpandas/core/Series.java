@@ -31,15 +31,11 @@ public class Series<T> {
     public List<T> getData(){
         return this.data;
     }
-    /**
-     * Cette methode imprime les valeurs de la serie dans la console.
-     *
-     */
-    public void print(){
-        for (T value: data)
-        System.out.println(value);
-    }
 
+    /**
+     * Cette methode renvoie la taille des series
+     * @return int : taille des series
+     */
     public int size() {
         return data.size();
     }

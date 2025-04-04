@@ -48,19 +48,19 @@ public class LecteurCSV {
                 throw new IllegalArgumentException("Le fichier CSV est mal forme.");
             }
 
-            String[] en_tetes = lines.get(0).split(",");
+            String[] enTetes = lines.get(0).split(",");
 
             // Pour chaque nom de colonne, on cree une nouvelle Series vide et on l'ajoute a la Map des colonnes du DataFrame.
-            for (String en_tete: en_tetes){
-                dataframe.colonne.put(en_tete, new Series<>(new ArrayList<>()));
+            for (String enTete: enTetes){
+                dataframe.colonne.put(enTete, new Series<>(new ArrayList<>()));
             }
 
             // On parcourt les lignes de donnees et on les ajoute dans le DataFrame
             for (int i = 1; i < lines.size(); i++) {
                 String[] values = lines.get(i).split(",");
-                for (int j = 0; j < en_tetes.length; j++) {
+                for (int j = 0; j < enTetes.length; j++) {
                     String value = values[j];
-                    Series<?> column = dataframe.colonne.get(en_tetes[j]);
+                    Series<?> column = dataframe.colonne.get(enTetes[j]);
                     if (column != null) {
                         ((Series<String>) column).getData().add(value);
                     }

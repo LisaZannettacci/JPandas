@@ -58,19 +58,8 @@ public class DataFrame {
      * @param nomColonne Le nom de la colonne que l'on souhaite recuperer.
      * @return La serie de donnees associee a ce nom de colonne, sous forme d'un objet `Series`.
      */
-    public Series<?> GetColonne(String nomColonne) {
+    public Series<?> getColonne(String nomColonne) {
         return this.colonne.get(nomColonne);
-    }
-
-    /**
-     *  Cette methode parcourt toutes les colonnes du DataFrame et utilise la methode print de chaque Series pour afficher les valeurs de la colonne.
-     *
-     */
-    public void print() {
-        for (String nomColonne: colonne.keySet()){
-            System.out.println("Colonne: " + nomColonne);
-            colonne.get(nomColonne).print();
-        }
     }
 
     private int nbColonnes() {
@@ -82,82 +71,93 @@ public class DataFrame {
      * mode 0 : afficher toutes les lignes (valeur de nb inutilisee)
      * mode 1 : afficher les nb premieres lignes
      * mode 2 : afficher les nb derniers lignes
-     * @param nb
-     * @param mode
+     * @param nb le nombre de lignes que l'on veut afficher
+     * @param mode le mode d'affichage
      */
-    public void afficherLignes(int nb, int mode) {
+    private void afficherLignes(int nb, int mode) {
         Set<String> cles = colonne.keySet();
-        HashMap<String, Integer> largeurs_colonnes = new HashMap<>();
-        List<String> liste_cles = new ArrayList<String>();
+        HashMap<String, Integer> largeursColonnes = new HashMap<>();
+        List<String> listeCles = new ArrayList<String>();
 
         //pour determiner le format de l'affichage, on cherche la taille max dans chaque colonne
         for (String cle : cles) {
-            liste_cles.add(cle);
-            largeurs_colonnes.put(cle, 0);            
+            listeCles.add(cle);
+            largeursColonnes.put(cle, 0);            
         }
 
-        int nb_lignes_total = colonne.get(liste_cles.get(0)).size();
+        int nbLignesTotal = colonne.get(listeCles.get(0)).size();
         int debut = 0;
-        int nb_lignes_a_afficher = 0;
+        int nbLignesAAfficher = 0;
 
         if (mode == 0) { // affichage de toutes les lignes
-            nb_lignes_a_afficher = nb_lignes_total;
+            nbLignesAAfficher = nbLignesTotal;
             debut = 0;
         }
         else if (mode == 1) { // affichage des premieres lignes
-            nb_lignes_a_afficher = nb;
+            nbLignesAAfficher = nb;
             debut = 0;
         }
         else if (mode == 2) { // affichage des dernieres lignes
-            nb_lignes_a_afficher = nb;
-            debut = nb_lignes_total - nb;
+            nbLignesAAfficher = nb;
+            debut = nbLignesTotal - nb;
         }
         
         int largeur;
-        for (String cle : liste_cles) {
+        for (String cle : listeCles) {
             largeur = 0;
-            for (int i = debut; i < debut+nb_lignes_a_afficher; i++){
+            for (int i = debut; i < debut+nbLignesAAfficher; i++){
                 largeur = Math.max(largeur, colonne.get(cle).getData().get(i).toString().length());
             }
             largeur = Math.max(largeur, cle.length()) + 2;
-            largeurs_colonnes.put(cle, largeur);
+            largeursColonnes.put(cle, largeur);
         }
 
         // Affichage des noms des colonnes
-        for (String cle : liste_cles) {
-            System.out.printf("%-" + largeurs_colonnes.get(cle) + "s", cle);
+        for (String cle : listeCles) {
+            System.out.printf("%-" + largeursColonnes.get(cle) + "s", cle);
         }
-        int taille_mot = 0;
+        int tailleMot = 0;
         String separateur = "";
-        for (String cle : liste_cles) {
-            taille_mot = cle.length();
-            for (int i = 0; i<taille_mot; i++){
+        for (String cle : listeCles) {
+            tailleMot = cle.length();
+            for (int i = 0; i<tailleMot; i++){
                 separateur+="-";
             }
-            System.out.printf("%-" + largeurs_colonnes.get(cle) + "s", separateur);
+            System.out.printf("%-" + largeursColonnes.get(cle) + "s", separateur);
             separateur = "";
         }
         System.out.println();
 
         //Affichage des lignes
-        for (int i = debut; i < debut+nb_lignes_a_afficher; i++){
-            for (String cle : liste_cles) {
+        for (int i = debut; i < debut+nbLignesAAfficher; i++){
+            for (String cle : listeCles) {
                 String valeur = colonne.get(cle).getData().get(i).toString();
-                System.out.printf("%-" + largeurs_colonnes.get(cle) + "s", valeur);
+                System.out.printf("%-" + largeursColonnes.get(cle) + "s", valeur);
             }
             System.out.println();
         }
     }
 
-    public void afficherTout(){
+    /**
+     * Methode qui affiche toutes les lignes du dataframe
+     */
+    public void afficherTout() {
         afficherLignes(0, 0);
     }
 
-    public void afficherPremieresLignes(int nb){
+    /**
+     * Methode qui affiche les nb premieres lignes du dataframe
+     * @param nb le nombre de lignes que l'on veut afficher en partant du debut
+     */
+    public void afficherPremieresLignes(int nb) {
         afficherLignes(nb, 1);
     }
 
-    public void afficherDernieresLignes(int nb){
+    /**
+     * Methode qui affiche les nb dernieres lignes du dataframe
+     * @param nb le nombre de lignes que l'on veut afficher en partant de la fin
+     */
+    public void afficherDernieresLignes(int nb) {
         afficherLignes(nb, 2);
     }
 }

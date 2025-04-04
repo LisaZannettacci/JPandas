@@ -17,7 +17,7 @@ public class DataFrameTest {
         HashMap<String, Series<?>> colonne = new HashMap<>();
         colonne.put("Name", new Series<>(Arrays.asList("Alice", "Bob")));
         DataFrame dataframe = new DataFrame(colonne);
-        assertEquals(2, dataframe.GetColonne("Name").getData().size());
+        assertEquals(2, dataframe.getColonne("Name").getData().size());
     }
 
     // @Test
