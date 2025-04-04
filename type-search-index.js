@@ -1,1 +1,1 @@
-typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"com.jpandas","l":"JPandas"}];updateSearchResults();
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"com.jpandas.core","l":"DataFrame"},{"p":"com.jpandas.io","l":"LecteurCSV"},{"p":"com.jpandas.core","l":"Series"}];updateSearchResults();
