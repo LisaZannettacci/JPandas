@@ -45,7 +45,6 @@ cd JPandas
 ```
 
 ### Construire le projet avec Maven
-![Maven]((https://img.shields.io/badge/apachemaven-C71A36.svg?style=for-the-badge&logo=apachemaven&logoColor=white))
 
 ```sh
 mvn clean package
