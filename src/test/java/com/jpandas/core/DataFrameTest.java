@@ -5,7 +5,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -22,7 +22,7 @@ public class DataFrameTest {
     // Construction Manuelle du DataFrame, sans passer par le CSV
     @Test
     public void testCreationDataFrameAvecUneColonne() {
-        HashMap<String, Series<?>> colonnes = new HashMap<>();
+        LinkedHashMap<String, Series<?>> colonnes = new LinkedHashMap<>();
         colonnes.put("Name", new Series<>(Arrays.asList("Alice", "Bob")));
         DataFrame dataframe = new DataFrame(colonnes);
 
@@ -116,5 +116,101 @@ public class DataFrameTest {
         assertEquals("Alice", dataframe.getColonne("Nom").getData().get(0));
         assertEquals("30", dataframe.getColonne("Age").getData().get(1));
         assertEquals("Paris", dataframe.getColonne("Ville").getData().get(2));
+    }
+
+    // On vérifie que l'affichage de toutes les lignes est correct avec une colonne
+    @Test
+    public void testAffichageToutAvecUneColonne() {
+        LinkedHashMap<String, Series<?>> colonnes = new LinkedHashMap<>();
+        colonnes.put("Nom", new Series<>(Arrays.asList("Alice", "Bob")));
+        // colonnes.put("Age", new Series<>(Arrays.asList("10", "20")));
+        DataFrame dataframe = new DataFrame(colonnes);
+
+        String res = dataframe.afficherLignes(0, 0);
+        String attendu = "Nom    \n" + //
+                         "---    \n" + //
+                         "Alice  \n" + //
+                         "Bob    \n" + //
+                         "";
+
+        assertEquals(attendu, res);
+    }
+
+    // On vérifie que l'affichage de toutes les lignes est correct avec plusieurs colonnes
+    @Test
+    public void testAffichageToutAvec3Colonnes() {
+        LinkedHashMap<String, Series<?>> colonnes = new LinkedHashMap<>();
+        colonnes.put("Nom", new Series<>(Arrays.asList("Alice", "Bob")));
+        colonnes.put("Age", new Series<>(Arrays.asList("10", "20")));
+        colonnes.put("Ville", new Series<>(Arrays.asList("Grenoble", "Lyon")));
+        DataFrame dataframe = new DataFrame(colonnes);
+
+        String res = dataframe.afficherLignes(0, 0);
+        String attendu = "Nom    Age  Ville     \n" + //
+                         "---    ---  -----     \n" + //
+                         "Alice  10   Grenoble  \n" + //
+                         "Bob    20   Lyon      \n" + //
+                         "";
+
+        assertEquals(attendu, res);
+    }
+
+    // On vérifie que l'affichage des nb premières lignes est correct (ici les 2 premières)
+    @Test
+    public void testAffichagePremieresLignesAvec3Colonnes() {
+        LinkedHashMap<String, Series<?>> colonnes = new LinkedHashMap<>();
+        colonnes.put("Nom", new Series<>(Arrays.asList("Alice", "Bob", "Justine", "Lisa")));
+        colonnes.put("Age", new Series<>(Arrays.asList("10", "20", "21", "21")));
+        colonnes.put("Ville", new Series<>(Arrays.asList("Grenoble", "Lyon", "Grenoble", "Le Cheylas")));
+        DataFrame dataframe = new DataFrame(colonnes);
+
+        String res = dataframe.afficherLignes(2, 1);
+        String attendu = "Nom    Age  Ville     \n" + //
+                         "---    ---  -----     \n" + //
+                         "Alice  10   Grenoble  \n" + //
+                         "Bob    20   Lyon      \n" + //
+                         "";
+
+        assertEquals(attendu, res);
+    }
+
+    // On vérifie que l'affichage des nb dernières lignes est correct (ici les 2 dernières)
+    @Test
+    public void testAffichageDernieresLignesAvec3Colonnes() {
+        LinkedHashMap<String, Series<?>> colonnes = new LinkedHashMap<>();
+        colonnes.put("Nom", new Series<>(Arrays.asList("Alice", "Bob", "Justine", "Lisa")));
+        colonnes.put("Age", new Series<>(Arrays.asList("10", "20", "21", "21")));
+        colonnes.put("Ville", new Series<>(Arrays.asList("Grenoble", "Lyon", "Grenoble", "Le Cheylas")));
+        DataFrame dataframe = new DataFrame(colonnes);
+
+        String res = dataframe.afficherLignes(2, 2);
+        String attendu = "Nom      Age  Ville       \n" + //
+                         "---      ---  -----       \n" + //
+                         "Justine  21   Grenoble    \n" + //
+                         "Lisa     21   Le Cheylas  \n" + //
+                         "";
+
+        assertEquals(attendu, res);
+    }
+
+
+    // On vérifie que lorsqu'il n'y a qu'une seule ligne, c'est bien à la fois la dernière et la première
+    @Test
+    public void testAffichageUneSeuleLigne() {
+        LinkedHashMap<String, Series<?>> colonnes = new LinkedHashMap<>();
+        colonnes.put("Nom", new Series<>(Arrays.asList("Justine")));
+        colonnes.put("Age", new Series<>(Arrays.asList("21")));
+        colonnes.put("Ville", new Series<>(Arrays.asList("Grenoble")));
+        DataFrame dataframe = new DataFrame(colonnes);
+
+        String premiere = dataframe.afficherLignes(1, 1);
+        String derniere = dataframe.afficherLignes(1, 2);
+        String attendu = "Nom      Age  Ville     \n" + //
+                         "---      ---  -----     \n" + //
+                         "Justine  21   Grenoble  \n" + //
+                         "";
+
+        assertEquals(attendu, premiere);
+        assertEquals(attendu, derniere);
     }
 }

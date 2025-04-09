@@ -1,6 +1,6 @@
 package com.jpandas.core;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.List;
@@ -16,7 +16,7 @@ import com.jpandas.io.LecteurCSV;
  *  - en specifiant directement les donnees de chaque colonne.
  *  - en lisant les donnees depuis un fichier CSV.
  *
- * @author Lisa ZANNETTACCI, REAT Justine
+ * @author Lisa ZANNETTACCI, Justine REAT
  * @version 1.0
  * @see Series
  * 
@@ -48,7 +48,7 @@ public class DataFrame {
      * 
      */
     public DataFrame(String path) {
-        this.colonne = new HashMap<>();
+        this.colonne = new LinkedHashMap<>();
         LecteurCSV.parseCSV(path, this);
     }
 
@@ -70,13 +70,13 @@ public class DataFrame {
      * Methode pour renvoyer les lignes a afficher, avec differents modes possibles :
      * mode 0 : toutes les lignes (valeur de nb inutilisee)
      * mode 1 : les nb premieres lignes
-     * mode 2 : les nb derniers lignes
+     * mode 2 : les nb dernieres lignes
      * @param nb le nombre de lignes que l'on veut afficher
      * @param mode le mode d'affichage
      */
-    private String afficherLignes(int nb, int mode) {
+    public String afficherLignes(int nb, int mode) {
         Set<String> cles = colonne.keySet();
-        HashMap<String, Integer> largeursColonnes = new HashMap<>();
+        LinkedHashMap<String, Integer> largeursColonnes = new LinkedHashMap<>();
         List<String> listeCles = new ArrayList<String>();
         String chaine = "";
 
