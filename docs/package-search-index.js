@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.jpandas"},{"l":"com.jpandas.core"},{"l":"com.jpandas.io"}];updateSearchResults();
