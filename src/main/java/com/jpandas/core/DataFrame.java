@@ -62,10 +62,6 @@ public class DataFrame {
         return this.colonne.get(nomColonne);
     }
 
-    private int nbColonnes() {
-        return colonne.size();
-    }
-
     /**
      * Methode pour renvoyer les lignes a afficher, avec differents modes possibles :
      * mode 0 : toutes les lignes (valeur de nb inutilisee)
