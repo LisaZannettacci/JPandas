@@ -5,7 +5,7 @@ on:
     branches:
       - main
       - fix_ci
-      - creation_dataframe
+      - feature_creation_et_affichage_dataframe
   pull_request:
     branches:
       - main
