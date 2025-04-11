@@ -1,7 +1,7 @@
 # JPandas
 [![Pandas](https://img.shields.io/badge/pandas-%23150458.svg?style=for-the-badge&logo=pandas&logoColor=white)](https://github.com/pandas-dev/pandas/blob/main/README.md)
 
-![Coverage](https://img.shields.io/badge/Coverage-93%25-brightgreen)
+![Coverage](https://img.shields.io/badge/Coverage-25.321%25-brightgreen)
 
 ![Coverage](https://lisazannettacci.github.io/JPandas/badges/coverage.svg)
 

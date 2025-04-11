@@ -41,8 +41,7 @@ jobs:
         id: extract_coverage
         run: |
           mkdir -p badges
-          COVERAGE=$(grep -oPm1 "(?<=<counter type=\"INSTRUCTION\" missed=\")[0-9]+" target/site/jacoco/jacoco.xml)
-          MISSED=$COVERAGE
+          MISSED=$(grep -oPm1 "(?<=missed=\")[0-9]+" target/site/jacoco/jacoco.xml)
           COVERED=$(grep -oPm1 "(?<=covered=\")[0-9]+" target/site/jacoco/jacoco.xml)
           TOTAL=$((MISSED + COVERED))
           PERCENT=$(( 100 * COVERED / TOTAL ))
