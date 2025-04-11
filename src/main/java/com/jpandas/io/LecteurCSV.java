@@ -33,41 +33,59 @@ public class LecteurCSV {
      * Cette methode lit toutes les lignes d'un fichier CSV et cree un DataFrame.
      * Principe: On commence par lire la premiere ligne (les en-tetes) et on cree une Series pour chaque colonne du DataFrame.
      * Ensuite, on parcourt les lignes suivantes (les donnees) et on ajoute chaque valeur dans la colonne appropriee.
+     * Si le csv ne contient pas de colonne "Index", on l'ajoute.
      * 
      * @param path Chemin du fichier
      * @param dataframe Le dataframe qui va contenir les donnees de notre CSV
      */
-    public static void parseCSV(String path, DataFrame dataframe)
-    {
+    public static void parseCSV(String path, DataFrame dataframe) {
         try {
-            List<String> lines = Files.readAllLines(Paths.get(path));
-
-            // Verification du format CSV
-            // Si moins de 2 lignes => pas de donnees ou pas d'en-tetes
-            if (lines.size() < 2) {
+            List<String> lignes = Files.readAllLines(Paths.get(path));
+    
+            if (lignes.size() < 2) {
                 throw new IllegalArgumentException("Le fichier CSV est mal forme.");
             }
-
-            String[] enTetes = lines.get(0).split(",");
-
-            // Pour chaque nom de colonne, on cree une nouvelle Series vide et on l'ajoute a la Map des colonnes du DataFrame.
-            for (String enTete: enTetes){
+    
+            String[] enTetes = lignes.get(0).split(",");
+    
+            // Verifie si une colonne Index est deja presente
+            boolean indexColonne = false;
+            for (String enTete : enTetes) {
+                if (enTete.equalsIgnoreCase("Index")) {
+                    indexColonne = true;
+                    break;
+                }
+            }
+    
+            // On cree TOUTES les colonnes du fichier, y compris "Index" s’il est deja la
+            for (String enTete : enTetes) {
                 dataframe.colonne.put(enTete, new Series<>(new ArrayList<>()));
             }
-
-            // On parcourt les lignes de donnees et on les ajoute dans le DataFrame
-            for (int i = 1; i < lines.size(); i++) {
-                String[] values = lines.get(i).split(",");
+    
+            // On parcourt les lignes de donnees et on les ajoute dans les bonnes colonnes
+            for (int i = 1; i < lignes.size(); i++) {
+                String[] valeurs = lignes.get(i).split(",");
                 for (int j = 0; j < enTetes.length; j++) {
-                    String value = values[j];
-                    Series<?> column = dataframe.colonne.get(enTetes[j]);
-                    if (column != null) {
-                        ((Series<String>) column).getData().add(value);
+                    String nomColonne = enTetes[j];
+                    Series<String> colonne = (Series<String>) dataframe.colonne.get(nomColonne);
+                    if (colonne != null) {
+                        colonne.getData().add(valeurs[j]);
                     }
                 }
             }
+    
+            // Si le CSV n’a PAS de colonne Index, on en ajoute une automatiquement
+            if (!indexColonne) {
+                List<String> index = new ArrayList<>();
+                for (int i = 0; i < lignes.size() - 1; i++) {
+                    index.add(String.valueOf(i));
+                }
+                dataframe.colonne.put("Index", new Series<>(index));
+            }
+    
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+    
 }

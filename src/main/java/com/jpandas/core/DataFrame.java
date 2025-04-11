@@ -30,14 +30,25 @@ public class DataFrame {
 
     /**
      * Constructeur pour initialiser un DataFrame en specifiant les donnees de chaque colonne.
+     * Si le dataframe n'a pas de colonne "Index", on l'ajoute
      *
      * @param colonne  Un {@code Map<String, Series<?>>} ou:
      *  - chaque cle est le nom de la colonne (par exemple "Age" ou "Name")
      *  - la valeur est une instance de la classe {@link Series} qui contient les donnees de cette colonne.
      * 
      */
-    public DataFrame(Map<String, Series<?>> colonne) {
-        this.colonne = colonne;
+    public DataFrame(Map<String, Series<?>> colonnes) {
+        this.colonne = new LinkedHashMap<>(colonnes);
+
+        // Si la colonne "Index" n'existe pas, on la cree
+        if (!this.colonne.containsKey("Index")) {
+            List<String> indexList = new ArrayList<>();
+            for (int i = 0; i < colonnes.values().iterator().next().size(); i++) {
+                indexList.add(String.valueOf(i));  // Index auto-genere de 0 a n-1
+            }
+            this.colonne.put("Index", new Series<>(indexList));  // Ajout de la colonne "Index"
+        }
+        this.mettreIndexEnPremier();
     }
 
     /**
@@ -50,6 +61,7 @@ public class DataFrame {
     public DataFrame(String path) {
         this.colonne = new LinkedHashMap<>();
         LecteurCSV.parseCSV(path, this);
+        this.mettreIndexEnPremier();
     }
 
     /**
@@ -58,8 +70,42 @@ public class DataFrame {
      * @param nomColonne Le nom de la colonne que l'on souhaite recuperer.
      * @return La serie de donnees associee a ce nom de colonne, sous forme d'un objet `Series`.
      */
-    public Series<?> getColonne(String nomColonne) {
+    public Series<?> getColonneByName(String nomColonne) {
         return this.colonne.get(nomColonne);
+    }
+
+    /**
+     * Metode qui renvoie le nombre de colonne qui compose le Dataframe
+     * @return le nombre de colonne qui compose le Dataframe
+     */
+    public int getNbColonne() {
+        return this.colonne.size();
+    }
+
+    /**
+     * Deplace la colonne "Index" en premiere position dans le DataFrame, si elle existe.
+     */
+    public void mettreIndexEnPremier() {
+        if (!colonne.containsKey("Index")) {
+            return; // Rien a faire si la colonne Index n'existe pas
+        }
+
+        // On sauvegarde la colonne Index
+        Series<?> indexColonne = colonne.remove("Index");
+
+        // Nouvelle map pour stocker les colonnes dans le bon ordre
+        LinkedHashMap<String, Series<?>> nouvelleColonnes = new LinkedHashMap<>();
+
+        // On met d'abord Index
+        nouvelleColonnes.put("Index", indexColonne);
+
+        // Puis les autres colonnes dans l'ordre actuel, sauf "Index"
+        for (Map.Entry<String, Series<?>> entry : colonne.entrySet()) {
+            nouvelleColonnes.put(entry.getKey(), entry.getValue());
+        }
+
+        // On remplace l'ancienne map par la nouvelle ordonnee
+        this.colonne = nouvelleColonnes;
     }
 
     /**
