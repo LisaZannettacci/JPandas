@@ -13,12 +13,6 @@ import com.jpandas.core.Series;
  * La classe LecteurCSV est utilis&eacute;e pour lire les donn&eacute;es d'un fichier CSV
  * et les convertir en un DataFrame, ou chaque colonne du CSV devient une Series
  * dans le DataFrame.
- * <br>
- * <b>Exemple :</b>
- * <pre>
- * LecteurCSV lecteur = new LecteurCSV();
- * DataFrame df = new DataFrame("chemin/vers/fichier.csv");
- * </pre>
  * 
  * @author Lisa ZANNETTACCI, REAT Justine
  * @version 1.0
