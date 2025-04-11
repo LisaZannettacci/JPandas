@@ -32,7 +32,7 @@ public class DataFrame {
      * Constructeur pour initialiser un DataFrame en specifiant les donnees de chaque colonne.
      * Si le dataframe n'a pas de colonne "Index", on l'ajoute
      *
-     * @param colonne  Un {@code Map<String, Series<?>>} ou:
+     * @param colonnes  Un {@code Map<String, Series<?>>} ou:
      *  - chaque cle est le nom de la colonne (par exemple "Age" ou "Name")
      *  - la valeur est une instance de la classe {@link Series} qui contient les donnees de cette colonne.
      * 
@@ -115,6 +115,8 @@ public class DataFrame {
      * mode 2 : les nb dernieres lignes
      * @param nb le nombre de lignes que l'on veut afficher
      * @param mode le mode d'affichage
+     * 
+     * @return chaine : une string que l'on peut afficher et qui contient le dataframe
      */
     public String afficherLignes(int nb, int mode) {
         Set<String> cles = colonne.keySet();
