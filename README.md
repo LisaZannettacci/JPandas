@@ -3,6 +3,9 @@
 
 ![Coverage](https://img.shields.io/badge/Coverage-93%25-brightgreen)
 
+![Coverage](https://lisazannettacci.github.io/JPandas/badges/coverage.svg)
+
+
 JPandas est une bibliothèque Java inspirée de la bibliothèque Python [Pandas (librairie Python)](https://pandas.pydata.org/). Elle permet de manipuler, analyser et traiter des données de manière efficace en Java.
 
 ## Table des matières

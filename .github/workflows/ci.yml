@@ -5,6 +5,9 @@ on:
     branches:
       - main
       - fix_ci
+      - fix_readme.md
+      - feature_creation_et_affichage_dataframe
+      - feature_docker
   pull_request:
     branches:
       - main
@@ -34,6 +37,34 @@ jobs:
           name: jacoco-report
           path: target/site/jacoco
 
+      - name: Extract JaCoCo Coverage
+        id: extract_coverage
+        run: |
+          mkdir -p badges
+          COVERAGE=$(grep -oPm1 "(?<=<counter type=\"INSTRUCTION\" missed=\")[0-9]+" target/site/jacoco/jacoco.xml)
+          MISSED=$COVERAGE
+          COVERED=$(grep -oPm1 "(?<=covered=\")[0-9]+" target/site/jacoco/jacoco.xml)
+          TOTAL=$((MISSED + COVERED))
+          PERCENT=$(( 100 * COVERED / TOTAL ))
+          echo "Coverage is $PERCENT%"
+          echo "::set-output name=coverage::$PERCENT"
+
+          # Générer un badge SVG
+          COLOR=red
+          if [ $PERCENT -ge 80 ]; then COLOR=green; elif [ $PERCENT -ge 60 ]; then COLOR=yellow; fi
+          echo "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"120\" height=\"20\">
+            <rect width=\"70\" height=\"20\" fill=\"#555\" />
+            <rect x=\"70\" width=\"50\" height=\"20\" fill=\"$COLOR\" />
+            <text x=\"10\" y=\"14\" fill=\"#fff\" font-family=\"Verdana\" font-size=\"11\">coverage</text>
+            <text x=\"75\" y=\"14\" fill=\"#fff\" font-family=\"Verdana\" font-size=\"11\">$PERCENT%</text>
+          </svg>" > badges/coverage.svg
+
+      - name: Upload Badge
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-badge
+          path: badges/coverage.svg
+
       - name: Generate Javadoc
         run: mvn javadoc:javadoc
 
@@ -50,7 +81,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          persist-credentials: false  # Empêche de garder les credentials dans le cache pour plus de sécurité
+          persist-credentials: false
 
       - name: Set up GitHub Token
         env:
@@ -64,10 +95,25 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: javadoc
-          path: javadoc  # Mettre un dossier temporaire pour éviter des conflits avec `target/site/apidocs`
+          path: javadoc
 
-      - name: Deploy Javadoc to GitHub Pages
+      - name: Download Coverage Badge
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-badge
+          path: badges
+
+      - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
-          folder: javadoc  # Mettre le même dossier que celui défini ci-dessus
+          folder: javadoc
+          clean: false  # Pour éviter d'écraser le badge
+          target-folder: apidocs
+
+      - name: Deploy Badge to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: badges
+          clean: false
