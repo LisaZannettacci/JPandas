@@ -4,8 +4,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -13,11 +15,26 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import com.jpandas.core.DataFrame;
+import com.jpandas.io.LecteurCSV;
 import com.jpandas.utils.FichierTestUtils;
 
 import org.junit.Test;
 
 public class DataFrameTest {
+
+    // On vérifie que la méthode getNbColonne renvoie bien le bon nombre de colonne
+    @Test
+    public void testgetNbColonne() {
+        LinkedHashMap<String, Series<?>> colonnes = new LinkedHashMap<>();
+        colonnes.put("Index", new Series<>(Arrays.asList("0", "1")));
+        colonnes.put("Name", new Series<>(Arrays.asList("Lisounette", "Justinette")));
+        colonnes.put("Jeux", new Series<>(Arrays.asList("genshin_impac", "paladin")));
+        DataFrame dataframe = new DataFrame(colonnes);
+
+        int nbColonne = dataframe.getNbColonne();
+
+        assertEquals(3, nbColonne);
+    }
 
     // Construction Manuelle du DataFrame, sans passer par le CSV
     @Test
@@ -26,7 +43,7 @@ public class DataFrameTest {
         colonnes.put("Name", new Series<>(Arrays.asList("Alice", "Bob")));
         DataFrame dataframe = new DataFrame(colonnes);
 
-        Series<?> nomColonne = dataframe.getColonne("Name");
+        Series<?> nomColonne = dataframe.getColonneByName("Name");
 
         assertNotNull(nomColonne);
         assertEquals(2, nomColonne.size());
@@ -46,8 +63,8 @@ public class DataFrameTest {
 
             DataFrame dataframe = new DataFrame(fichierTMP.toString());
 
-            assertNotNull(dataframe.getColonne("Nom"));
-            assertNotNull(dataframe.getColonne("Age"));
+            assertNotNull(dataframe.getColonneByName("Nom"));
+            assertNotNull(dataframe.getColonneByName("Age"));
         } finally {
             fichierTMP.toFile().deleteOnExit();
         }
@@ -64,8 +81,8 @@ public class DataFrameTest {
 
             DataFrame dataframe = new DataFrame(fichierTMP.toString());
 
-            assertEquals(2, dataframe.getColonne("Nom").size());
-            assertEquals(2, dataframe.getColonne("Age").size());
+            assertEquals(2, dataframe.getColonneByName("Nom").size());
+            assertEquals(2, dataframe.getColonneByName("Age").size());
         } finally {
             fichierTMP.toFile().deleteOnExit();
         }
@@ -82,8 +99,8 @@ public class DataFrameTest {
 
             DataFrame dataframe = new DataFrame(fichierTMP.toString());
 
-            assertEquals("Alice", dataframe.getColonne("Nom").getData().get(0));
-            assertEquals("30", dataframe.getColonne("Age").getData().get(1));
+            assertEquals("Alice", dataframe.getColonneByName("Nom").getData().get(0));
+            assertEquals("30", dataframe.getColonneByName("Age").getData().get(1));
         } finally {
             fichierTMP.toFile().deleteOnExit();
         }
@@ -112,25 +129,25 @@ public class DataFrameTest {
 
         DataFrame dataframe = new DataFrame(cheminCSV.toString());
 
-        assertEquals(3, dataframe.getColonne("Nom").size());
-        assertEquals("Alice", dataframe.getColonne("Nom").getData().get(0));
-        assertEquals("30", dataframe.getColonne("Age").getData().get(1));
-        assertEquals("Paris", dataframe.getColonne("Ville").getData().get(2));
+        assertEquals(3, dataframe.getColonneByName("Nom").size());
+        assertEquals("Alice", dataframe.getColonneByName("Nom").getData().get(0));
+        assertEquals("30", dataframe.getColonneByName("Age").getData().get(1));
+        assertEquals("Paris", dataframe.getColonneByName("Ville").getData().get(2));
     }
 
     // On vérifie que l'affichage de toutes les lignes est correct avec une colonne
     @Test
     public void testAffichageToutAvecUneColonne() {
         LinkedHashMap<String, Series<?>> colonnes = new LinkedHashMap<>();
-        colonnes.put("Nom", new Series<>(Arrays.asList("Alice", "Bob")));
+        colonnes.put("Nom", new Series<>(Arrays.asList("Justine", "Lisa")));
         // colonnes.put("Age", new Series<>(Arrays.asList("10", "20")));
         DataFrame dataframe = new DataFrame(colonnes);
 
         String res = dataframe.afficherLignes(0, 0);
-        String attendu = "Nom    \n" + //
-                         "---    \n" + //
-                         "Alice  \n" + //
-                         "Bob    \n" + //
+        String attendu = "Index  Nom      \n" + //
+                         "-----  ---      \n" + //
+                         "0      Justine  \n" + //
+                         "1      Lisa     \n" + //
                          "";
 
         assertEquals(attendu, res);
@@ -146,10 +163,10 @@ public class DataFrameTest {
         DataFrame dataframe = new DataFrame(colonnes);
 
         String res = dataframe.afficherLignes(0, 0);
-        String attendu = "Nom    Age  Ville     \n" + //
-                         "---    ---  -----     \n" + //
-                         "Alice  10   Grenoble  \n" + //
-                         "Bob    20   Lyon      \n" + //
+        String attendu = "Index  Nom    Age  Ville     \n" + //
+                         "-----  ---    ---  -----     \n" + //
+                         "0      Alice  10   Grenoble  \n" + //
+                         "1      Bob    20   Lyon      \n" + //
                          "";
 
         assertEquals(attendu, res);
@@ -165,10 +182,10 @@ public class DataFrameTest {
         DataFrame dataframe = new DataFrame(colonnes);
 
         String res = dataframe.afficherLignes(2, 1);
-        String attendu = "Nom    Age  Ville     \n" + //
-                         "---    ---  -----     \n" + //
-                         "Alice  10   Grenoble  \n" + //
-                         "Bob    20   Lyon      \n" + //
+        String attendu = "Index  Nom    Age  Ville     \n" + //
+                         "-----  ---    ---  -----     \n" + //
+                         "0      Alice  10   Grenoble  \n" + //
+                         "1      Bob    20   Lyon      \n" + //
                          "";
 
         assertEquals(attendu, res);
@@ -184,15 +201,15 @@ public class DataFrameTest {
         DataFrame dataframe = new DataFrame(colonnes);
 
         String res = dataframe.afficherLignes(2, 2);
-        String attendu = "Nom      Age  Ville       \n" + //
-                         "---      ---  -----       \n" + //
-                         "Justine  21   Grenoble    \n" + //
-                         "Lisa     21   Le Cheylas  \n" + //
+        System.out.println(res);
+        String attendu = "Index  Nom      Age  Ville       \n" + //
+                         "-----  ---      ---  -----       \n" + //
+                         "2      Justine  21   Grenoble    \n" + //
+                         "3      Lisa     21   Le Cheylas  \n" + //
                          "";
 
         assertEquals(attendu, res);
     }
-
 
     // On vérifie que lorsqu'il n'y a qu'une seule ligne, c'est bien à la fois la dernière et la première
     @Test
@@ -205,12 +222,147 @@ public class DataFrameTest {
 
         String premiere = dataframe.afficherLignes(1, 1);
         String derniere = dataframe.afficherLignes(1, 2);
-        String attendu = "Nom      Age  Ville     \n" + //
-                         "---      ---  -----     \n" + //
-                         "Justine  21   Grenoble  \n" + //
+        String attendu = "Index  Nom      Age  Ville     \n" + //
+                         "-----  ---      ---  -----     \n" + //
+                         "0      Justine  21   Grenoble  \n" + //
                          "";
 
         assertEquals(attendu, premiere);
         assertEquals(attendu, derniere);
+    }
+
+    // Tests de l'index
+    // On vérifie qu'on ajoute bien une colonne index lors de la création d'un dataframe qui n'en contient pas:
+    @Test
+    public void testCreationManuelleSansIndex() {
+        LinkedHashMap<String, Series<?>> colonnes = new LinkedHashMap<>();
+        colonnes.put("Nom", new Series<>(Arrays.asList("Titi", "Grogro", "Loki")));
+        colonnes.put("Age", new Series<>(Arrays.asList("8", "8", "2")));
+
+        DataFrame dataframe = new DataFrame(colonnes);
+
+        Series<?> index = dataframe.getColonneByName("Index");
+
+        assertNotNull(index);
+        assertEquals(3, index.size());
+        assertEquals("0", index.getData().get(0));
+        assertEquals("1", index.getData().get(1));
+        assertEquals("2", index.getData().get(2));
+    }
+
+    // On vérifie que la colonne index d'un dataframe existe bien (lorsqu'elle a été crée en amont manuellement)
+    @Test
+    public void testCreationManuelleAvecIndex() {
+        LinkedHashMap<String, Series<?>> colonnes = new LinkedHashMap<>();
+        colonnes.put("Index", new Series<>(Arrays.asList("0", "1")));
+        colonnes.put("Nom", new Series<>(Arrays.asList("Justine", "Lisa")));
+
+        DataFrame dataframe = new DataFrame(colonnes);
+
+        Series<?> index = dataframe.getColonneByName("Index");
+
+        assertEquals("0", index.getData().get(0));
+        assertEquals("1", index.getData().get(1));
+        assertEquals(2, index.size());
+    }
+
+    // On vérie qu'il n'y est pas d'erreur lorsque le csv est vide (on ne veut pas ajouter de colonne index)
+    @Test(expected = IllegalArgumentException.class)
+    public void testIndexNonCreeDansCSVInvalide() throws IOException {
+        Path fichierTMP = Files.createTempFile("empty", ".csv");
+        try {
+            FileWriter writer = new FileWriter(fichierTMP.toFile());
+            writer.write("");  // Fichier vide
+            writer.close();
+
+            new DataFrame(fichierTMP.toString()); // Devrait lever une exception
+        } finally {
+            fichierTMP.toFile().deleteOnExit();
+        }
+    }
+
+    // On vérifie qu'on peut ajouter une colonne 'Index' lorsque l'on extrait un CSV qui n'en contient pas
+    @Test
+    public void testChargementCSVSansIndex() throws IOException {
+        Path fichierTMP = Files.createTempFile("test_sans_index", ".csv");
+        try {
+            FileWriter writer = new FileWriter(fichierTMP.toFile());
+            writer.write("Nom,Age\nLisa,21\nJustine,21\n");
+            writer.close();
+
+            DataFrame dataframe = new DataFrame(fichierTMP.toString());
+
+            assertNotNull(dataframe.getColonneByName("Index"));
+            assertEquals(2, dataframe.getColonneByName("Index").size());
+            assertEquals("0", dataframe.getColonneByName("Index").getData().get(0));
+            assertEquals("1", dataframe.getColonneByName("Index").getData().get(1));
+            assertEquals(3, dataframe.getNbColonne());
+
+        } finally {
+            fichierTMP.toFile().deleteOnExit();
+        }
+    }
+
+    // On s'assure qu'un CSV qui contient déjà un "Index" est correctement traité
+    @Test
+    public void testChargementCSVAvecIndex() throws IOException {
+        Path fichierTMP = Files.createTempFile("test_avec_index", ".csv");
+        try {
+            FileWriter writer = new FileWriter(fichierTMP.toFile());
+            writer.write("Index,Nom,Age\n0,Lisa,21\n1,Justine,21\n");
+            writer.close();
+
+            DataFrame dataframe = new DataFrame(fichierTMP.toString());
+
+            assertNotNull(dataframe.getColonneByName("Index"));
+            assertEquals(2, dataframe.getColonneByName("Index").size());
+            assertEquals("0", dataframe.getColonneByName("Index").getData().get(0));
+            assertEquals("1", dataframe.getColonneByName("Index").getData().get(1));
+            assertEquals(3, dataframe.getNbColonne());
+
+        } finally {
+            fichierTMP.toFile().deleteOnExit();
+        }
+    }
+
+    // On s'assure qu'un CSV qui contient déjà un "Index" dans une position non attendue (au milieu) est correctement traité
+    @Test
+    public void testChargementCSVAvecIndexAuMilieu() throws IOException {
+        Path fichierTMP = Files.createTempFile("test_avec_index", ".csv");
+        try {
+            FileWriter writer = new FileWriter(fichierTMP.toFile());
+            writer.write("Nom,Index,Age\nLisa,0,21\nJustine,1,21\n");
+            writer.close();
+
+            DataFrame dataframe = new DataFrame(fichierTMP.toString());
+
+            assertNotNull(dataframe.getColonneByName("Index"));
+            assertEquals(2, dataframe.getColonneByName("Index").size());
+            assertEquals("0", dataframe.getColonneByName("Index").getData().get(0));
+            assertEquals("1", dataframe.getColonneByName("Index").getData().get(1));
+            assertEquals(3, dataframe.getNbColonne());
+
+        } finally {
+            fichierTMP.toFile().deleteOnExit();
+        }
+    }
+
+    // On vérifie que l'on peut mettre l'index en premier sans "casser" le dataframe
+    @Test
+    public void testMettreIndexEnPremier() {
+        Map<String, Series<?>> colonnes = new LinkedHashMap<>();
+        colonnes.put("Nom", new Series<>(List.of("Justine", "Lisa")));
+        colonnes.put("Index", new Series<>(List.of("0", "1")));
+        colonnes.put("Age", new Series<>(List.of("21", "21")));
+
+        DataFrame dataframe = new DataFrame(colonnes);
+
+        dataframe.mettreIndexEnPremier();
+
+        List<String> nomsColonnes = new ArrayList<>(dataframe.colonne.keySet());
+
+        assertEquals("Index", nomsColonnes.get(0));
+        assertEquals("Nom", nomsColonnes.get(1));
+        assertEquals("Age", nomsColonnes.get(2));
     }
 }
