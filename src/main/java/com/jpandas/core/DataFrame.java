@@ -216,4 +216,34 @@ public class DataFrame {
     public void afficherDernieresLignes(int nb) {
         System.out.print(afficherLignes(nb, 2));
     }
+
+
+    /**
+     * Affiche les statistiques descriptives (moyenne, minimum, maximum, &eacute;cart-type) 
+     * pour une colonne sp&eacute;cifi&eacute;e du DataFrame si celle-ci est num&eacute;rique.
+     * <p>
+     * Si la colonne n'existe pas ou si elle n'est pas num&eacute;rique, un message 
+     * appropri&eacute; est affich&eacute; &agrave; l'&eacute;cran.
+     * </p>
+     *
+     * @param nomColonne le nom de la colonne sur laquelle ex&eacute;cuter les statistiques
+     */
+    public void afficherStatistiques(String nomColonne) {
+        Series<?> serie = getColonneByName(nomColonne);
+        if (serie == null) {
+            System.out.println("Colonne non trouvée.");
+            return;
+        }
+    
+        if (!serie.estNumerique()) {
+            System.out.println("La colonne n'est pas numérique.");
+            return;
+        }
+    
+        System.out.println("Statistiques pour la colonne \"" + nomColonne + "\" :");
+        System.out.println("  Moyenne     : " + serie.moyenne());
+        System.out.println("  Minimum     : " + serie.minimum());
+        System.out.println("  Maximum     : " + serie.maximum());
+        System.out.println("  Écart-type  : " + serie.ecartType());
+    }
 }

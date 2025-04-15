@@ -9,8 +9,10 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.io.ByteArrayOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -18,9 +20,14 @@ import com.jpandas.core.DataFrame;
 import com.jpandas.io.LecteurCSV;
 import com.jpandas.utils.FichierTestUtils;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 public class DataFrameTest {
+
+    private final PrintStream originalOut = System.out;
+    private final ByteArrayOutputStream output = new ByteArrayOutputStream();
 
     // On vérifie que la méthode getNbColonne renvoie bien le bon nombre de colonne
     @Test
@@ -365,4 +372,76 @@ public class DataFrameTest {
         assertEquals("Nom", nomsColonnes.get(1));
         assertEquals("Age", nomsColonnes.get(2));
     }
+
+    @Before
+    public void setUp() {
+        System.setOut(new PrintStream(output));
+    }
+
+    @Test
+    public void testAfficherStatistiquesAvecValeursValides() {
+        Map<String, Series<?>> colonnes = new LinkedHashMap<>();
+        colonnes.put("Notes", new Series<>(List.of(10,14,12)));
+
+        DataFrame dataframe = new DataFrame(colonnes);
+
+        // Capture de la sortie console
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        PrintStream originalOut = System.out;
+        System.setOut(new PrintStream(output));
+
+        dataframe.afficherStatistiques("Notes");
+
+        // Restauration de System.out
+        System.setOut(originalOut);
+
+        // Texte attendu
+        String sortie = output.toString().trim();
+
+        assertTrue(sortie.contains("Statistiques pour la colonne \"Notes\""));
+        assertTrue(sortie.contains("Moyenne") && sortie.contains("12.0"));
+        assertTrue(sortie.contains("Minimum") && sortie.contains("10.0"));
+        assertTrue(sortie.contains("Maximum") && sortie.contains("14.0"));
+        assertTrue(sortie.contains("Écart-type"));
+    }
+
+    @Test
+    public void testAfficherStatistiquesColonneInexistante() {
+        Map<String, Series<?>> colonnes = new LinkedHashMap<>();
+        colonnes.put("Note", new Series<>(List.of(10,14,12)));
+
+        DataFrame dataframe = new DataFrame(colonnes);
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(output));
+
+        dataframe.afficherStatistiques("Inconnue");
+
+        System.setOut(System.out);
+
+        assertTrue(output.toString().contains("Colonne non trouvée"));
+    }
+
+    @Test
+    public void testAfficherStatistiquesColonneNonNumerique() {
+        Map<String, Series<?>> colonnes = new LinkedHashMap<>();
+        colonnes.put("Animaux", new Series<>(List.of("Titi", "Grogro", "Leia", "Loki", "Loxo", "Ruby", "Raven", "Boule", "Nenette", "Mini-Nenette", "Mira")));
+
+        DataFrame dataframe = new DataFrame(colonnes);
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(output));
+
+        dataframe.afficherStatistiques("Animaux");
+
+        System.setOut(System.out);
+
+        assertTrue(output.toString().contains("La colonne n'est pas numérique"));
+    }
+
+    @After
+    public void tearDown() {
+        System.setOut(originalOut);
+    }
+
 }
