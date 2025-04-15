@@ -378,6 +378,7 @@ public class DataFrameTest {
         System.setOut(new PrintStream(output));
     }
 
+    // On s'asssure d'afficher les bonnes valeurs statistiques pour un focntionnement normal
     @Test
     public void testAfficherStatistiquesAvecValeursValides() {
         Map<String, Series<?>> colonnes = new LinkedHashMap<>();
@@ -405,6 +406,7 @@ public class DataFrameTest {
         assertTrue(sortie.contains("Écart-type"));
     }
 
+    // On s'asssure d'afficher le bon message lorsque la colonne n'existe pas!
     @Test
     public void testAfficherStatistiquesColonneInexistante() {
         Map<String, Series<?>> colonnes = new LinkedHashMap<>();
@@ -422,6 +424,7 @@ public class DataFrameTest {
         assertTrue(output.toString().contains("Colonne non trouvée"));
     }
 
+    // On s'asssure d'afficher le bon message lorsque la colonne n'est pas numérique!
     @Test
     public void testAfficherStatistiquesColonneNonNumerique() {
         Map<String, Series<?>> colonnes = new LinkedHashMap<>();
