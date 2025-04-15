@@ -93,7 +93,7 @@ Et en ligne : [Jpandas Javadoc](https://lisazannettacci.github.io/JPandas/)
 Le `DataFrame` est conçu comme une table de hachage ([`LinkedHashMap<String, Series<?>>`](https://docs.oracle.com/javase/8/docs/api/java/util/LinkedHashMap.html)) où chaque clé représente une colonne, et chaque valeur est une `Series` (liste de données).
 
 Pourquoi `LinkedHashMap` ?
-Cela permet de préserver l'ordre d'insertion des colonnes, ce qui est permet de rendre l'affiche cohérent et de faciliter les tests d'affichage.
+Cela permet de préserver l'ordre d'insertion des colonnes, ce qui permet de rendre l'affichage cohérent et de faciliter les tests d'affichage.
 
 ### 2) Organisation du code
 - `core`: classes principales `DataFrame` et `Series`
@@ -106,7 +106,7 @@ Cela permet de préserver l'ordre d'insertion des colonnes, ce qui est permet de
 
 
 ## Description du workflow mis en place
-Sur GitHub, nous avons adopté la méthode suivante pour essayé de garantir la qualité, la lisibilité et la maintenabilité du code. Voici les principales pratiques mises en place :
+Sur GitHub, nous avons adopté la méthode suivante pour essayer de garantir la qualité, la lisibilité et la maintenabilité du code. Voici les principales pratiques mises en place :
 
 - Protection de la branche main:
 
@@ -144,7 +144,7 @@ Nous faisons en sorte que le code reste toujours dans un état stable : les test
         - Analyse de la clarté et lisibilité du code.
         - Propositions d'améliorations éventuelles.
         - Vérification de la cohérence de la fonctionnalité avec la logique du projet, analyse de la spécification pour analyser la cohérence avec l'implémentation.
-        - Relecture orthographique et stylistique de la documentation liée. Plus vérification de exaustivité.
+        - Relecture orthographique et stylistique de la documentation liée. Plus vérification de l'exhaustivité.
     3) Contrôle de la couverture de tests avec JaCoCo :
         - Nous exigeons une couverture minimale de 85% sur les nouvelles parties du code.
         - Si la couverture est insuffisante, nous demandons l’ajout de tests supplémentaires.
@@ -152,7 +152,7 @@ Nous faisons en sorte que le code reste toujours dans un état stable : les test
 - Déploiement automatique de la documentation :
 
 Une fois la PR fusionnée, un bot GitHub Actions génère automatiquement la documentation Javadoc.
-ette documentation est publiée via la branche gh-pages, ce qui la rend accessible en ligne via GitHub Pages.
+Cette documentation est publiée via la branche gh-pages, ce qui la rend accessible en ligne via GitHub Pages.
 
 ## Description des images Docker/ lien vers le dépôt
 
