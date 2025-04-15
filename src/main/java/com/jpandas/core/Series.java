@@ -80,6 +80,8 @@ public class Series<T> {
      * Calcule la moyenne des valeurs num&eacute;riques de la s&eacute;rie.
      *
      * @return La moyenne sous forme de {@code double}, ou {@code NaN} si la s&eacute;rie n'est pas num&eacute;rique ou vide.
+     * 
+     * @see <a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.mean.html">Documentation Pandas - mean</a>
      */
     public double moyenne() {
         List<Double> valeurs = getValeursNumeriques();
@@ -96,6 +98,8 @@ public class Series<T> {
      * Renvoie la plus petite valeur num&eacute;rique de la s&eacute;rie.
      *
      * @return La valeur minimale sous forme de {@code double}, ou {@code NaN} si non applicable.
+     * 
+     * @see <a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.min.html">Documentation Pandas - min</a>
      */
     public double minimum() {
         List<Double> valeurs = getValeursNumeriques();
@@ -111,6 +115,8 @@ public class Series<T> {
      * Renvoie la plus grande valeur num&eacute;rique de la s&eacute;rie.
      *
      * @return La valeur maximale sous forme de {@code double}, ou {@code NaN} si non applicable.
+     * 
+     * @see <a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.max.html">Documentation Pandas - max</a>
      */
     public double maximum() {
         List<Double> valeurs = getValeursNumeriques();
@@ -126,6 +132,8 @@ public class Series<T> {
      * Calcule l'&eacute;cart-type des valeurs num&eacute;riques de la s&eacute;rie.
      *
      * @return L'&eacute;cart-type sous forme de {@code double}, ou {@code NaN} si la s&eacute;rie n'est pas num&eacute;rique ou contient moins de deux valeurs.
+     * 
+     * @see <a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.std.html">Documentation Pandas - std</a>
      */
     public double ecartType() {
         List<Double> valeurs = getValeursNumeriques();

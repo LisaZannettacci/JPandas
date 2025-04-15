@@ -227,6 +227,8 @@ public class DataFrame {
      * </p>
      *
      * @param nomColonne le nom de la colonne sur laquelle ex&eacute;cuter les statistiques
+     * 
+     * @see <a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.describe.html">Documentation Pandas - describe</a>
      */
     public void afficherStatistiques(String nomColonne) {
         Series<?> serie = getColonneByName(nomColonne);
