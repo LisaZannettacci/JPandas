@@ -26,7 +26,11 @@ JPandas est une bibliothèque Java inspirée de la bibliothèque Python [Pandas 
 - Lecture de fichiers CSV en DataFrame
 - Représentation des colonnes sous forme de Series
 - Affichage de tout ou partie d’un DataFrame (début / fin / complet)
+- Sélection par lignes ou par colonnes avec ou sans "slashing"
+- Filtrage avec prédicat
+- Manipulation par index
 - Chargement dynamique depuis un fichier
+- Analyse statistique (moyenne, min, max, écart-type)
 - Intégration continue via GitHub Actions
 - Tests unitaires (JUnit) et couverture de code (JaCoCo)
 - Génération de documentation via Javadoc
@@ -66,7 +70,7 @@ mvn jacoco:report
 ```
 Les rapports seront disponibles dans `target/site/jacoco`.
 
-Des tests sont effectués sur Ubuntu via gitHub.
+Des tests sont effectués sur Ubuntu via gitHub, sur Windows en local.
 
 ![Ubuntu](https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)
 ![Windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)
@@ -95,7 +99,7 @@ Et en ligne : [Jpandas Javadoc](https://lisazannettacci.github.io/JPandas/)
 Le `DataFrame` est conçu comme une table de hachage ([`LinkedHashMap<String, Series<?>>`](https://docs.oracle.com/javase/8/docs/api/java/util/LinkedHashMap.html)) où chaque clé représente une colonne, et chaque valeur est une `Series` (liste de données).
 
 Pourquoi `LinkedHashMap` ?
-Cela permet de préserver l'ordre d'insertion des colonnes, ce qui est permet de rendre l'affiche cohérent et de faciliter les tests d'affichage.
+Cela permet de préserver l'ordre d'insertion des colonnes, ce qui permet de rendre l'affichage cohérent et de faciliter les tests d'affichage.
 
 ### 2) Organisation du code
 - `core`: classes principales `DataFrame` et `Series`
@@ -106,9 +110,18 @@ Cela permet de préserver l'ordre d'insertion des colonnes, ce qui est permet de
 
 - `test`: tests unitaires avec `JUnit`
 
+### 3) Choix du filtrage avancé
+Nous avons choisi d'implémenter un filtrage avec prédicat (voir `filter` dans la classe `DataFrame`).
+
+Cela offre:
+- une grande flexibilité: on peut personnaliser facilement son filtre
+- un découpage logique: il suffit d'appliquer un "test" (`boolean java.util.function.Predicate.test(Map<String, Object> t)`)
+- la possibilté de combiner ses conditions
+- ...
+
 
 ## Description du workflow mis en place
-Sur GitHub, nous avons adopté la méthode suivante pour essayé de garantir la qualité, la lisibilité et la maintenabilité du code. Voici les principales pratiques mises en place :
+Sur GitHub, nous avons adopté la méthode suivante pour essayer de garantir la qualité, la lisibilité et la maintenabilité du code. Voici les principales pratiques mises en place :
 
 - Protection de la branche main:
 
@@ -146,7 +159,7 @@ Nous faisons en sorte que le code reste toujours dans un état stable : les test
         - Analyse de la clarté et lisibilité du code.
         - Propositions d'améliorations éventuelles.
         - Vérification de la cohérence de la fonctionnalité avec la logique du projet, analyse de la spécification pour analyser la cohérence avec l'implémentation.
-        - Relecture orthographique et stylistique de la documentation liée. Plus vérification de exaustivité.
+        - Relecture orthographique et stylistique de la documentation liée. Plus vérification de l'exhaustivité.
     3) Contrôle de la couverture de tests avec JaCoCo :
         - Nous exigeons une couverture minimale de 85% sur les nouvelles parties du code.
         - Si la couverture est insuffisante, nous demandons l’ajout de tests supplémentaires.
@@ -154,7 +167,7 @@ Nous faisons en sorte que le code reste toujours dans un état stable : les test
 - Déploiement automatique de la documentation :
 
 Une fois la PR fusionnée, un bot GitHub Actions génère automatiquement la documentation Javadoc.
-ette documentation est publiée via la branche gh-pages, ce qui la rend accessible en ligne via GitHub Pages.
+Cette documentation est publiée via la branche gh-pages, ce qui la rend accessible en ligne via GitHub Pages.
 
 ## Description des images Docker/ lien vers le dépôt
 
@@ -191,6 +204,10 @@ Cependant, nous sommes conscientes que, dans un environnement professionnel ou o
 - l’intégration de contributions externes,
 
 - et la standardisation des projets open source.
+
+
+Nous avons également pris le parti d'avoir une documentation claire, lisisble et bien présentée sur la javadoc en configurant une javadoc HTML au détriment de sa bonne lisibilité dans le code source (notamment à code de l'encodage des accents).
+Pour nous, il est plus important de privilégier la compréhension d'un utilisateur extérieur plutôt que celle des développeurs (qui connaissent le code et qui au pire des cas peuvent lire la doc javadoc).
 
 ## Feedback
 
