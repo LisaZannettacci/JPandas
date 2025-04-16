@@ -31,6 +31,7 @@ JPandas est une bibliothèque Java inspirée de la bibliothèque Python [Pandas 
 - Intégration continue via GitHub Actions
 - Tests unitaires (JUnit) et couverture de code (JaCoCo)
 - Génération de documentation via Javadoc
+- Déploiment d'une image Docker (grâce à GitHub Packages) qui, à l'exécution du conteneur, lance une démonstration des fonctionnalités Jpandas
 
 ## Installation
 ### Prérequis
@@ -166,7 +167,7 @@ Nous faisons en sorte que le code reste toujours dans un état stable : les test
 Une fois la PR fusionnée, un bot GitHub Actions génère automatiquement la documentation Javadoc.
 Cette documentation est publiée via la branche gh-pages, ce qui la rend accessible en ligne via GitHub Pages.
 
-## Description des images Docker/ lien vers le dépôt
+## Description des images Docker
 
 ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
 
