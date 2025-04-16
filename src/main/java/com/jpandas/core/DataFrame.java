@@ -227,9 +227,38 @@ public class DataFrame {
     public void afficherDernieresLignes(int nb) {
         System.out.print(afficherLignes(nb, 2));
     }
-
-    // Sélectionner
-
+    
+    /**
+     * Affiche les statistiques descriptives (moyenne, minimum, maximum, &eacute;cart-type) 
+     * pour une colonne sp&eacute;cifi&eacute;e du DataFrame si celle-ci est num&eacute;rique.
+     * <p>
+     * Si la colonne n'existe pas ou si elle n'est pas num&eacute;rique, un message 
+     * appropri&eacute; est affich&eacute; &agrave; l'&eacute;cran.
+     * </p>
+     *
+     * @param nomColonne le nom de la colonne sur laquelle ex&eacute;cuter les statistiques
+     * 
+     * @see <a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.describe.html">Documentation Pandas - describe</a>
+     */
+    public void afficherStatistiques(String nomColonne) {
+        Series<?> serie = getColonneByName(nomColonne);
+        if (serie == null) {
+            System.out.println("Colonne non trouvée.");
+            return;
+        }
+    
+        if (!serie.estNumerique()) {
+            System.out.println("La colonne n'est pas numérique.");
+            return;
+        }
+    
+        System.out.println("Statistiques pour la colonne \"" + nomColonne + "\" :");
+        System.out.println("  Moyenne     : " + serie.moyenne());
+        System.out.println("  Minimum     : " + serie.minimum());
+        System.out.println("  Maximum     : " + serie.maximum());
+        System.out.println("  Écart-type  : " + serie.ecartType());
+    }
+    
     /**
      * Remplace la colonne "Index" actuelle par une autre colonne sp&eacute;cifi&eacute;e.<br>
      * La colonne utilis&eacute;e devient le nouvel index, et est retir&eacute;e des colonnes visibles.<br><br>

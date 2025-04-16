@@ -10,8 +10,10 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.io.ByteArrayOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -19,6 +21,8 @@ import com.jpandas.core.DataFrame;
 import com.jpandas.io.LecteurCSV;
 import com.jpandas.utils.FichierTestUtils;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.After;
 import org.junit.Before;
@@ -26,6 +30,9 @@ import org.junit.Before;
 public class DataFrameTest {
     
     private DataFrame dataframeAttribut;
+
+    private final PrintStream originalOut = System.out;
+    private final ByteArrayOutputStream output = new ByteArrayOutputStream();
 
     // On vérifie que la méthode getNbColonne renvoie bien le bon nombre de colonne
     @Test
@@ -370,8 +377,81 @@ public class DataFrameTest {
         assertEquals("Age", nomsColonnes.get(2));
     }
 
-    // Tests sur la sélection
+    @Before
+    public void setUpStatistiques() {
+        System.setOut(new PrintStream(output));
+    }
 
+    // On s'asssure d'afficher les bonnes valeurs statistiques pour un fonctionnement normal
+    @Test
+    public void testAfficherStatistiquesAvecValeursValides() {
+        Map<String, Series<?>> colonnes = new LinkedHashMap<>();
+        colonnes.put("Notes", new Series<>(List.of(10,14,12)));
+
+        DataFrame dataframe = new DataFrame(colonnes);
+
+        // Capture de la sortie console
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        PrintStream originalOut = System.out;
+        System.setOut(new PrintStream(output));
+
+        dataframe.afficherStatistiques("Notes");
+
+        // Restauration de System.out
+        System.setOut(originalOut);
+
+        // Texte attendu
+        String sortie = output.toString().trim();
+
+        assertTrue(sortie.contains("Statistiques pour la colonne \"Notes\""));
+        assertTrue(sortie.contains("Moyenne") && sortie.contains("12.0"));
+        assertTrue(sortie.contains("Minimum") && sortie.contains("10.0"));
+        assertTrue(sortie.contains("Maximum") && sortie.contains("14.0"));
+        assertTrue(sortie.contains("Écart-type"));
+    }
+
+    // On s'asssure d'afficher le bon message lorsque la colonne n'existe pas!
+    @Test
+    public void testAfficherStatistiquesColonneInexistante() {
+        Map<String, Series<?>> colonnes = new LinkedHashMap<>();
+        colonnes.put("Note", new Series<>(List.of(10,14,12)));
+
+        DataFrame dataframe = new DataFrame(colonnes);
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(output));
+
+        dataframe.afficherStatistiques("Inconnue");
+
+        System.setOut(System.out);
+
+        assertTrue(output.toString().contains("Colonne non trouvée"));
+    }
+
+    // On s'asssure d'afficher le bon message lorsque la colonne n'est pas numérique!
+    @Test
+    public void testAfficherStatistiquesColonneNonNumerique() {
+        Map<String, Series<?>> colonnes = new LinkedHashMap<>();
+        colonnes.put("Animaux", new Series<>(List.of("Titi", "Grogro", "Leia", "Loki", "Loxo", "Ruby", "Raven", "Boule", "Nenette", "Mini-Nenette", "Mira")));
+
+        DataFrame dataframe = new DataFrame(colonnes);
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(output));
+
+        dataframe.afficherStatistiques("Animaux");
+
+        System.setOut(System.out);
+
+        assertTrue(output.toString().contains("La colonne n'est pas numérique"));
+    }
+
+    @After
+    public void tearDownStatistiques() {
+        System.setOut(originalOut);
+    }
+
+    // Tests sur la sélection
     // On s'assure que les lignes de la colonne qui a été choisie pour remplacer l'index sont cohérentes
     @Test
     public void testSetIndexRemplaceIndexParColonne() {
@@ -575,7 +655,7 @@ public class DataFrameTest {
 
     // Préparation des tests de filtrage avancé
     @Before
-    public void setUp() {
+    public void setUpSelection() {
         Map<String, Series<?>> colonnes = new LinkedHashMap<>();
         colonnes.put("Nom", new Series<>(List.of("Lisounette", "Louinounet", "Justinette", "Evanounette")));
         colonnes.put("Animaux", new Series<>(List.of("Leia", "Titi", "Grogro", "Loki")));
@@ -627,7 +707,7 @@ public class DataFrameTest {
 
     // Nettoyage de la préparation des tests de filtrage avancé
     @After
-    public void tearDown() {
+    public void tearDownSelection() {
         dataframeAttribut = null;
     }
 }

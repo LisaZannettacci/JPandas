@@ -27,6 +27,7 @@ JPandas est une bibliothèque Java inspirée de la bibliothèque Python [Pandas 
 - Filtrage avec prédicat
 - Manipulation par index
 - Chargement dynamique depuis un fichier
+- Analyse statistique (moyenne, min, max, écart-type)
 - Intégration continue via GitHub Actions
 - Tests unitaires (JUnit) et couverture de code (JaCoCo)
 - Génération de documentation via Javadoc
