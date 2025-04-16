@@ -372,7 +372,7 @@ public class DataFrameTest {
 
     // Tests sur la sélection
 
-    // On s'assure que les lignes de la colonnes qui a été choisies pour remplacer l'index sont cohérentes
+    // On s'assure que les lignes de la colonne qui a été choisie pour remplacer l'index sont cohérentes
     @Test
     public void testSetIndexRemplaceIndexParColonne() {
     List<String> noms = List.of("Lisa", "Justine", "Eva", "Louis");
@@ -391,7 +391,7 @@ public class DataFrameTest {
     assertEquals("Louis", index.getData().get(3));
     }
 
-    // On s'assure que la colonne qui est devenue l'index a disparue
+    // On s'assure que la colonne qui est devenue l'index a disparu
     @Test
     public void testSetIndexSupprimeAncienneColonne() {
         List<String> noms = List.of("Lisa", "Justine", "Eva", "Louis");
@@ -405,7 +405,7 @@ public class DataFrameTest {
         assertFalse(dataframe.colonne.containsKey("Nom"));
     }
 
-    // On s'assure qu'on lève une execption si la colonne que l'on veut mettre en index n'existe pas
+    // On s'assure qu'on lève une exception si la colonne que l'on veut mettre en index n'existe pas
     @Test(expected = IllegalArgumentException.class)
     public void testSetIndexColonneInexistante() {
         List<String> noms = List.of("Lisa", "Justine", "Eva");
