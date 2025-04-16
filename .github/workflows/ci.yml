@@ -99,7 +99,7 @@ jobs:
       # Étape 3: Construire l'image Docker
       - name: Build Docker image
         run: |
-          docker build -t ghcr.io/${{ github.repository }}/jpandas:latest .
+          docker build -t ghcr.io/lisazannettacci/jpandas:latest .
 
       # Étape 4: Pousser l'image Docker sur GitHub Container Registry
       - name: Push Docker image to GitHub Packages
