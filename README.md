@@ -23,7 +23,7 @@ JPandas est une bibliothèque Java inspirée de la bibliothèque Python [Pandas 
 - Lecture de fichiers CSV en DataFrame
 - Représentation des colonnes sous forme de Series
 - Affichage de tout ou partie d’un DataFrame (début / fin / complet)
-- Sélection par lignes par colonnes avec ou sans "slashing"
+- Sélection par lignes ou par colonnes avec ou sans "slashing"
 - Filtrage avec prédicat
 - Manipulation par index
 - Chargement dynamique depuis un fichier
@@ -202,7 +202,7 @@ Cependant, nous sommes conscientes que, dans un environnement professionnel ou o
 - et la standardisation des projets open source.
 
 
-Nous avons également pris le partie d'avoir une documentation claire, lisisble et bien présentée sur la javadoc en configurant une javadoc HTML au détrimant de sa bonne lisibilité dans le code source (notamment à code de l'encodage des accents).
+Nous avons également pris le parti d'avoir une documentation claire, lisisble et bien présentée sur la javadoc en configurant une javadoc HTML au détriment de sa bonne lisibilité dans le code source (notamment à code de l'encodage des accents).
 Pour nous, il est plus important de privilégier la compréhension d'un utilisateur extérieur plutôt que celle des développeurs (qui connaissent le code et qui au pire des cas peuvent lire la doc javadoc).
 
 ## Feedback
