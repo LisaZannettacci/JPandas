@@ -378,7 +378,7 @@ public class DataFrameTest {
     }
 
     @Before
-    public void setUp() {
+    public void setUpStatistiques() {
         System.setOut(new PrintStream(output));
     }
 
@@ -447,7 +447,7 @@ public class DataFrameTest {
     }
 
     @After
-    public void tearDown() {
+    public void tearDownStatistiques() {
         System.setOut(originalOut);
     }
 
@@ -655,7 +655,7 @@ public class DataFrameTest {
 
     // Préparation des tests de filtrage avancé
     @Before
-    public void setUp() {
+    public void setUpSelection() {
         Map<String, Series<?>> colonnes = new LinkedHashMap<>();
         colonnes.put("Nom", new Series<>(List.of("Lisounette", "Louinounet", "Justinette", "Evanounette")));
         colonnes.put("Animaux", new Series<>(List.of("Leia", "Titi", "Grogro", "Loki")));
@@ -707,7 +707,7 @@ public class DataFrameTest {
 
     // Nettoyage de la préparation des tests de filtrage avancé
     @After
-    public void tearDown() {
+    public void tearDownSelection() {
         dataframeAttribut = null;
     }
 }
