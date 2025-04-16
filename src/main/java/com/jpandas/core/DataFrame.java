@@ -257,7 +257,8 @@ public class DataFrame {
         System.out.println("  Minimum     : " + serie.minimum());
         System.out.println("  Maximum     : " + serie.maximum());
         System.out.println("  Écart-type  : " + serie.ecartType());
-      
+    }
+    
     /**
      * Remplace la colonne "Index" actuelle par une autre colonne sp&eacute;cifi&eacute;e.<br>
      * La colonne utilis&eacute;e devient le nouvel index, et est retir&eacute;e des colonnes visibles.<br><br>
