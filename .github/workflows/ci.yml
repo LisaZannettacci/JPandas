@@ -96,25 +96,17 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: javadoc
-          path: javadoc
+          path: site/apidocs
 
       - name: Download Coverage Badge
         uses: actions/download-artifact@v4
         with:
           name: coverage-badge
-          path: badges
+          path: site/badges
 
-      - name: Deploy to GitHub Pages
+      - name: Deploy All to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
-          folder: javadoc
-          clean: false  # Pour éviter d'écraser le badge
-          target-folder: apidocs
-
-      - name: Deploy Badge to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          branch: gh-pages
-          folder: badges
+          folder: site
           clean: false
