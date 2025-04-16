@@ -23,6 +23,9 @@ JPandas est une bibliothèque Java inspirée de la bibliothèque Python [Pandas 
 - Lecture de fichiers CSV en DataFrame
 - Représentation des colonnes sous forme de Series
 - Affichage de tout ou partie d’un DataFrame (début / fin / complet)
+- Sélection par lignes ou par colonnes avec ou sans "slashing"
+- Filtrage avec prédicat
+- Manipulation par index
 - Chargement dynamique depuis un fichier
 - Intégration continue via GitHub Actions
 - Tests unitaires (JUnit) et couverture de code (JaCoCo)
@@ -45,7 +48,6 @@ cd JPandas
 ```
 
 ### Construire le projet avec Maven
-![Maven]((https://img.shields.io/badge/apachemaven-C71A36.svg?style=for-the-badge&logo=apachemaven&logoColor=white))
 
 ```sh
 mvn clean package
@@ -64,7 +66,7 @@ mvn jacoco:report
 ```
 Les rapports seront disponibles dans `target/site/jacoco`.
 
-Des tests sont effectués sur Ubuntu via gitHub.
+Des tests sont effectués sur Ubuntu via gitHub, sur Windows en local.
 
 ![Ubuntu](https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)
 ![Windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)
@@ -103,6 +105,15 @@ Cela permet de préserver l'ordre d'insertion des colonnes, ce qui permet de ren
 - `utils`: utilitaires pour les tests
 
 - `test`: tests unitaires avec `JUnit`
+
+### 3) Choix du filtrage avancé
+Nous avons choisi d'implémenter un filtrage avec prédicat (voir `filter` dans la classe `DataFrame`).
+
+Cela offre:
+- une grande flexibilité: on peut personnaliser facilement son filtre
+- un découpage logique: il suffit d'appliquer un "test" (`boolean java.util.function.Predicate.test(Map<String, Object> t)`)
+- la possibilté de combiner ses conditions
+- ...
 
 
 ## Description du workflow mis en place
@@ -189,6 +200,10 @@ Cependant, nous sommes conscientes que, dans un environnement professionnel ou o
 - l’intégration de contributions externes,
 
 - et la standardisation des projets open source.
+
+
+Nous avons également pris le parti d'avoir une documentation claire, lisisble et bien présentée sur la javadoc en configurant une javadoc HTML au détriment de sa bonne lisibilité dans le code source (notamment à code de l'encodage des accents).
+Pour nous, il est plus important de privilégier la compréhension d'un utilisateur extérieur plutôt que celle des développeurs (qui connaissent le code et qui au pire des cas peuvent lire la doc javadoc).
 
 ## Feedback
 

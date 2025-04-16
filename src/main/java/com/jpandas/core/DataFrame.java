@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.function.Predicate;
 
 import com.jpandas.io.LecteurCSV;
 
@@ -125,6 +127,9 @@ public class DataFrame {
      * @param nb   Le nombre de lignes &agrave; afficher
      * @param mode Le mode d'affichage (0, 1 ou 2)
      * @return Une cha&icirc;ne contenant les lignes format&eacute;es du DataFrame
+     * 
+     * @see <a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.head.html">pandas.DataFrame.head()</a>
+     * @see <a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.tail.html">pandas.DataFrame.tail()</a>
      */
     public String afficherLignes(int nb, int mode) {
         Set<String> cles = colonne.keySet();
@@ -194,6 +199,8 @@ public class DataFrame {
 
     /**
      * M&eacute;thode qui affiche toutes les lignes du DataFrame.
+     * 
+     * @see <a href="https://pandas.pydata.org/docs/user_guide/options.html#maximum-number-of-rows-displayed">Pandas - Displaying all rows</a>
      */
     public void afficherTout() {
         System.out.print(afficherLignes(0, 0));
@@ -203,6 +210,8 @@ public class DataFrame {
      * M&eacute;thode qui affiche les {@code nb} premi&egrave;res lignes du DataFrame.
      * 
      * @param nb Le nombre de lignes &agrave; afficher &agrave; partir du d&eacute;but
+     * 
+     * @see <a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.head.html">pandas.DataFrame.head()</a>
      */
     public void afficherPremieresLignes(int nb) {
         System.out.print(afficherLignes(nb, 1));
@@ -212,8 +221,217 @@ public class DataFrame {
      * M&eacute;thode qui affiche les {@code nb} derni&egrave;res lignes du DataFrame.
      * 
      * @param nb Le nombre de lignes &agrave; afficher &agrave; partir de la fin
+     * 
+     * @see <a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.tail.html">pandas.DataFrame.tail()</a>
      */
     public void afficherDernieresLignes(int nb) {
         System.out.print(afficherLignes(nb, 2));
+    }
+
+    // Sélectionner
+
+    /**
+     * Remplace la colonne "Index" actuelle par une autre colonne sp&eacute;cifi&eacute;e.<br>
+     * La colonne utilis&eacute;e devient le nouvel index, et est retir&eacute;e des colonnes visibles.<br><br>
+     *
+     * Fonctionne comme en Pandas : <code>df.set_index("Nom")</code><br>
+     *
+     * @param nomColonne Le nom de la colonne &agrave; utiliser comme nouvel index
+     * 
+     * @throws IllegalArgumentException si la colonne n&apos;existe pas ou contient des doublons
+     *
+     * @see <a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.set_index.html">Documentation Pandas - set_index</a>
+     */
+    public void setIndex(String nomColonne) {
+        Series<?> nouvelleColonneIndex = colonne.get(nomColonne);
+        if (nouvelleColonneIndex == null) {
+            throw new IllegalArgumentException("La colonne spécifiée n'existe pas : " + nomColonne);
+        }
+
+        Set<Object> valeursUniquess = new HashSet<>(nouvelleColonneIndex.getData());
+        if (valeursUniquess.size() != nouvelleColonneIndex.size()) {
+            throw new IllegalArgumentException("La colonne '" + nomColonne + "' contient des valeurs en double, elle ne peut pas être utilisée comme index.");
+        }
+
+        List<Object> index = new ArrayList<>(nouvelleColonneIndex.getData());
+        colonne.put("Index", new Series<>(index));
+
+        colonne.remove(nomColonne);
+    }
+  
+    /**
+     * Renvoie un sous-{@code DataFrame} contenant uniquement les lignes dont la valeur
+     * de l&apos;index est pr&eacute;sente dans la liste pass&eacute;e en param&egrave;tre.<br><br>
+     *
+     * Fonctionne comme en Pandas : <code>df.loc[["valeur1", "valeur2"]]</code><br>
+     *
+     * @param valeursIndex Liste des valeurs d&apos;index &agrave; s&eacute;lectionner
+     * 
+     * @return Un nouveau {@code DataFrame} contenant uniquement les lignes correspondant aux index donn&eacute;s
+     * 
+     * @throws IllegalStateException si la colonne "Index" est absente du {@code DataFrame}
+     *
+     * @see <a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.loc.html">Documentation Pandas - loc</a>
+     */
+
+    public DataFrame loc(List<String> valeursIndex) {
+        Series<?> indexSeries = colonne.get("Index");
+        if (indexSeries == null) {
+            throw new IllegalStateException("Aucune colonne 'Index' trouvée.");
+        }
+    
+        Map<String, Series<?>> nouvellesColonnes = new LinkedHashMap<>();
+        for (String nomCol : colonne.keySet()) {
+            nouvellesColonnes.put(nomCol, new Series<Object>(new ArrayList<>()));
+        }
+    
+        for (int i = 0; i < indexSeries.size(); i++) {
+            String valeurIndex = indexSeries.getData().get(i).toString();
+            if (valeursIndex.contains(valeurIndex)) {
+                for (String nomCol : colonne.keySet()) {
+                    ((List<Object>) nouvellesColonnes.get(nomCol).getData()).add(colonne.get(nomCol).getData().get(i));
+                }
+            }
+        }
+    
+        return new DataFrame(nouvellesColonnes);
+    }
+
+    /**
+     * <p>
+     * Retourne un sous-ensemble du DataFrame en s&eacute;lectionnant une plage de lignes et toutes les colonnes.
+     * </p>
+     * <p>
+     * Cette m&eacute;thode reproduit le comportement de la m&eacute;thode <code>iloc</code> de la biblioth&egrave;que Pandas :
+     * elle s&eacute;lectionne les lignes par leurs positions (et non par leurs valeurs d'index).
+     * </p>
+     *
+     * @param startRow Position de d&eacute;part (incluse) des lignes &agrave; s&eacute;lectionner
+     * @param endRow Position de fin (exclue) des lignes &agrave; s&eacute;lectionner
+     * @param startCol Position de d&eacute;part (incluse) des colonnes &agrave; s&eacute;lectionner
+     * @param endCol Position de fin (exclue) des colonnes &agrave; s&eacute;lectionner
+     * 
+     * @return Un nouveau DataFrame contenant uniquement les lignes et colonnes s&eacute;lectionn&eacute;es
+     * 
+     * @throws IndexOutOfBoundsException si une position est hors limites
+     * 
+     * @see <a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.iloc.html">Documentation Pandas - iloc</a>
+     */
+
+    public DataFrame iloc(int startRow, int endRow, int startCol, int endCol) {
+        if (startRow < 0 || endRow > colonne.get("Index").size() || startCol < 0 || endCol > getNbColonne()) {
+            throw new IndexOutOfBoundsException("Les indices sont hors limites.");
+        }
+    
+        Map<String, Series<?>> nouvellesColonnes = new LinkedHashMap<>();
+        
+        for (String nomCol : colonne.keySet()) {
+            nouvellesColonnes.put(nomCol, new Series<Object>(new ArrayList<>()));
+        }
+        
+        for (int i = startRow; i < endRow; i++) {
+            for (String nomCol : colonne.keySet()) {
+                ((List<Object>) nouvellesColonnes.get(nomCol).getData()).add(colonne.get(nomCol).getData().get(i));
+            }
+        }
+    
+        return new DataFrame(nouvellesColonnes);
+    }
+    
+
+    /**
+     * <p>
+     * Retourne un sous-ensemble du DataFrame en s&eacute;lectionnant une plage de lignes et de colonnes avec un intervalle de pas.
+     * </p>
+     * <p>
+     * Cette version avanc&eacute;e de <code>iloc</code> permet de sp&eacute;cifier un pas pour l’it&eacute;ration sur les lignes et colonnes,
+     * &agrave; la mani&egrave;re du slicing avec step dans Pandas (ex: <code>df.iloc[::2, ::2]</code>).
+     * </p>
+     *
+     * @param startRow Position de d&eacute;part (incluse) pour les lignes
+     * @param endRow Position de fin (exclue) pour les lignes
+     * @param stepRow Pas pour l’it&eacute;ration sur les lignes (&gt; 0)
+     * @param startCol Position de d&eacute;part (incluse) pour les colonnes
+     * @param endCol Position de fin (exclue) pour les colonnes
+     * @param stepCol Pas pour l’it&eacute;ration sur les colonnes (&gt; 0)
+     * 
+     * @return Un nouveau DataFrame avec les lignes et colonnes s&eacute;lectionn&eacute;es en fonction des pas
+     * 
+     * @throws IndexOutOfBoundsException si une position est hors des dimensions du DataFrame
+     * 
+     * @see <a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.iloc.html">Documentation Pandas - iloc</a>
+     */
+    public DataFrame iloc(int startRow, int endRow, int stepRow, int startCol, int endCol, int stepCol) {
+        if (startRow < 0 || endRow > colonne.get("Index").size() || startCol < 0 || endCol > getNbColonne()) {
+            throw new IndexOutOfBoundsException("Les indices sont hors limites.");
+        }
+    
+        Map<String, Series<?>> nouvellesColonnes = new LinkedHashMap<>();
+        
+        for (String nomCol : colonne.keySet()) {
+            nouvellesColonnes.put(nomCol, new Series<Object>(new ArrayList<>()));
+        }
+        
+        for (int i = startRow; i < endRow; i += stepRow) {
+            for (int j = startCol; j < endCol; j += stepCol) {
+                for (String nomCol : colonne.keySet()) {
+                    ((List<Object>) nouvellesColonnes.get(nomCol).getData()).add(colonne.get(nomCol).getData().get(i));
+                }
+            }
+        }
+    
+        return new DataFrame(nouvellesColonnes);
+    }   
+       
+
+    /**
+     * Filtre les lignes du {@code DataFrame} en fonction d'un crit&egrave;re donn&eacute;.
+     * <br><br>
+     * Cette m&eacute;thode permet de conserver uniquement les lignes qui v&eacute;rifient une condition sp&eacute;cifi&eacute;e 
+     * par un pr&eacute;dicat {@link Predicate}. Chaque ligne est repr&eacute;sent&eacute;e sous forme d'une map 
+     * {@code Map<String, Object>} o&ugrave; :
+     * <ul>
+     *   <li>chaque cl&eacute; est le nom d'une colonne</li>
+     *   <li>chaque valeur est la donn&eacute;e correspondante &agrave; cette colonne pour une ligne donn&eacute;e</li>
+     * </ul>
+     * <br>
+     * Exemple d'utilisation :
+     * <pre>{@code
+     * DataFrame dfFiltr&eacute; = df.filter(ligne -> ((int) ligne.get("Age")) > 30);
+     * }</pre>
+     * 
+     * @param critere Le pr&eacute;dicat {@link Predicate} &agrave; appliquer &agrave; chaque ligne. 
+     *                Si le crit&egrave;re retourne {@code true}, la ligne est conserv&eacute;e dans le nouveau DataFrame.
+     * 
+     * @return Un nouveau {@code DataFrame} contenant uniquement les lignes qui satisfont le crit&egrave;re.
+     * 
+     * @see Predicate
+     */
+    public DataFrame filter(Predicate<Map<String, Object>> critere) {
+        List<Map<String, Object>> lignesFiltrees = new ArrayList<>();
+
+        // Pour chaque ligne, on applique le critère
+        for (int i = 0; i < this.colonne.get("Index").size(); i++) {
+            Map<String, Object> ligne = new LinkedHashMap<>();
+            for (String cle : this.colonne.keySet()) {
+                ligne.put(cle, this.colonne.get(cle).getData().get(i));
+            }
+            
+            if (critere.test(ligne)) {
+                lignesFiltrees.add(ligne);
+            }
+        }
+
+        // Maintenant on recrée un DataFrame avec les lignes filtrées
+        Map<String, Series<?>> nouvellesColonnes = new LinkedHashMap<>();
+        for (String cle : this.colonne.keySet()) {
+            List<Object> donnees = new ArrayList<>();
+            for (Map<String, Object> ligne : lignesFiltrees) {
+                donnees.add(ligne.get(cle));
+            }
+            nouvellesColonnes.put(cle, new Series<>(donnees));
+        }
+
+        return new DataFrame(nouvellesColonnes);
     }
 }
