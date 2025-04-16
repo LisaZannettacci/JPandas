@@ -39,33 +39,6 @@ jobs:
           name: jacoco-report
           path: target/site/jacoco
 
-      - name: Extract JaCoCo Coverage
-        id: extract_coverage
-        run: |
-          mkdir -p badges
-          MISSED=$(grep -oPm1 "(?<=missed=\")[0-9]+" target/site/jacoco/jacoco.xml)
-          COVERED=$(grep -oPm1 "(?<=covered=\")[0-9]+" target/site/jacoco/jacoco.xml)
-          TOTAL=$((MISSED + COVERED))
-          PERCENT=$(( 100 * COVERED / TOTAL ))
-          echo "Coverage is $PERCENT%"
-          echo "::set-output name=coverage::$PERCENT"
-
-          # Générer un badge SVG
-          COLOR=red
-          if [ $PERCENT -ge 80 ]; then COLOR=green; elif [ $PERCENT -ge 60 ]; then COLOR=yellow; fi
-          echo "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"120\" height=\"20\">
-            <rect width=\"70\" height=\"20\" fill=\"#555\" />
-            <rect x=\"70\" width=\"50\" height=\"20\" fill=\"$COLOR\" />
-            <text x=\"10\" y=\"14\" fill=\"#fff\" font-family=\"Verdana\" font-size=\"11\">coverage</text>
-            <text x=\"75\" y=\"14\" fill=\"#fff\" font-family=\"Verdana\" font-size=\"11\">$PERCENT%</text>
-          </svg>" > badges/coverage.svg
-
-      - name: Upload Badge
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-badge
-          path: badges/coverage.svg
-
       - name: Generate Javadoc
         run: mvn javadoc:javadoc
 
@@ -82,7 +55,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          persist-credentials: false
+          persist-credentials: false  # Empêche de garder les credentials dans le cache pour plus de sécurité
 
       - name: Set up GitHub Token
         env:
@@ -96,25 +69,39 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: javadoc
-          path: javadoc
+          path: javadoc  # Mettre un dossier temporaire pour éviter des conflits avec `target/site/apidocs`
 
-      - name: Download Coverage Badge
-        uses: actions/download-artifact@v4
-        with:
-          name: coverage-badge
-          path: badges
-
-      - name: Deploy to GitHub Pages
+      - name: Deploy Javadoc to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
-          folder: javadoc
-          clean: false  # Pour éviter d'écraser le badge
-          target-folder: apidocs
+          folder: javadoc  # Mettre le même dossier que celui défini ci-dessus
+          
+  build-and-push-docker-image:
+    needs: build-and-test  # Cette étape doit attendre que la construction et les tests du projet soient terminés
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Deploy Badge to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
+      # Étape 1: Configurer Docker Buildx (si nécessaire pour un build multiplateforme)
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      # Étape 2: Se connecter au GitHub Container Registry
+      - name: Log in to GitHub Container Registry (GHCR)
+        uses: docker/login-action@v2
         with:
-          branch: gh-pages
-          folder: badges
-          clean: false
+          registry: ghcr.io
+          username: lisazannettacci
+          password: ${{ secrets.GHCR_TOKEN }}
+
+      # Étape 3: Construire l'image Docker
+      - name: Build Docker image
+        run: |
+          docker build -t ghcr.io/lisazannettacci/jpandas:latest .
+
+      # Étape 4: Pousser l'image Docker sur GitHub Container Registry
+      - name: Push Docker image to GitHub Packages
+        run: |
+          docker push ghcr.io/lisazannettacci/jpandas:latest
