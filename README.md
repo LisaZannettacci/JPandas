@@ -31,6 +31,7 @@ JPandas est une bibliothèque Java inspirée de la bibliothèque Python [Pandas 
 - Intégration continue via GitHub Actions
 - Tests unitaires (JUnit) et couverture de code (JaCoCo)
 - Génération de documentation via Javadoc
+- Déploiment d'une image Docker (grâce à GitHub Packages) qui, à l'exécution du conteneur, lance une démonstration des fonctionnalités Jpandas
 
 ## Installation
 ### Prérequis
@@ -44,7 +45,7 @@ JPandas est une bibliothèque Java inspirée de la bibliothèque Python [Pandas 
 ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
 
 ```sh
-git clone https://github.com/ton-utilisateur/JPandas.git
+git clone https://github.com/LisaZannettacci/JPandas.git
 cd JPandas
 ```
 
@@ -166,9 +167,25 @@ Nous faisons en sorte que le code reste toujours dans un état stable : les test
 Une fois la PR fusionnée, un bot GitHub Actions génère automatiquement la documentation Javadoc.
 Cette documentation est publiée via la branche gh-pages, ce qui la rend accessible en ligne via GitHub Pages.
 
-## Description des images Docker/ lien vers le dépôt
+## Description des images Docker
 
 ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
+
+L'image Docker que nous mettons à disposition présente une démonstration des fonctionnalités que nous avons implémentées pour les dataframes :
+- Affichage d'un DataFrame (complet, début ou fin)
+- Sélection par index
+- Sélection par plage
+- Filtrage
+- Analyse statistique (moyenne, min, max, écart-type)
+
+Récupérer l'image :
+```sh
+docker pull ghcr.io/lisazannettacci/jpandas:latest
+```
+Lancer le conteneur (exécuter la démonstration) :
+```sh
+docker run ghcr.io/lisazannettacci/jpandas:latest
+```
 
 ## Remarques
 La première chose que nous avons fait est l'initialisation du workflow de GitHub Action.
