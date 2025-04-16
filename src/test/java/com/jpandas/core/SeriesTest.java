@@ -52,7 +52,7 @@ public class SeriesTest {
         assertEquals(4, series.size());
     }
 
-    // Les 4 tests ci-dessous s'assurent du bon fonctionne des quatre méthodes statistiques avec des valeurs numériques
+    // Les 4 tests ci-dessous s'assurent du bon fonctionnement des quatre méthodes statistiques avec des valeurs numériques
     @Test
     public void testMoyenne() {
         Series<Number> serie = new Series<>(Arrays.asList(1, 2, 3, 4, 5));
@@ -78,7 +78,7 @@ public class SeriesTest {
     }
 
 
-    // Les 4 tests ci-dessous s'assurent du bon fonctionne des quatre méthodes statistiques avec des valeurs catégoricielles
+    // Les 4 tests ci-dessous s'assurent du bon fonctionnement des quatre méthodes statistiques avec des valeurs catégoricielles
     @Test
     public void testMoyenneAvecSerieNonNumerique() {
         Series<String> serie = new Series<>(Arrays.asList("a", "b", "c"));
@@ -103,7 +103,7 @@ public class SeriesTest {
         assertTrue(Double.isNaN(serie.ecartType()));
     }
 
-    // Les 4 tests ci-dessous s'assurent du bon fonctionne des quatre méthodes statistiques avec série vide
+    // Les 4 tests ci-dessous s'assurent du bon fonctionnement des quatre méthodes statistiques avec série vide
      @Test
     public void testMoyenneAvecSerieVide() {
         Series<Number> serie = new Series<>(new ArrayList<>());
@@ -128,14 +128,14 @@ public class SeriesTest {
         assertTrue(Double.isNaN(serie.ecartType()));
     }
 
-    // On vérifie que l'écart type fonctionne quand il y a qu'une seule valeur
+    // On vérifie que l'écart type fonctionne quand il n'y a qu'une seule valeur
     @Test
     public void testEcartTypeAvecUneSeuleValeur() {
         Series<Number> serie = new Series<>(Arrays.asList(42));
         assertTrue(Double.isNaN(serie.ecartType()));
     }
 
-    // Les 6 tests ci-dessous s'assurent du bon fonctionne des méthodes statistiques avec des valeurs/séries nulles
+    // Les 6 tests ci-dessous s'assurent du bon fonctionnement des méthodes statistiques avec des valeurs/séries nulles
     @Test
     public void testMoyenneAvecValeursNulles() {
         Series<Number> serie = new Series<>(Arrays.asList(null, null, null));
