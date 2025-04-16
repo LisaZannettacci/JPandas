@@ -18,7 +18,7 @@ JPandas est une bibliothèque Java inspirée de la bibliothèque Python Pandas. 
 ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
 
 ```sh
-git clone https://github.com/ton-utilisateur/JPandas.git
+git clone https://github.com/LisaZannettacci/JPandas.git
 cd JPandas
 ```
 
