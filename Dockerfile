@@ -11,7 +11,6 @@ COPY pom.xml /app/pom.xml
 COPY src /app/src
 
 # Etape 5: Compiler le projet avec Maven
-
 RUN apt-get update && apt-get install -y maven  # Installer Maven
 RUN mvn clean package  # Compilation du projet avec Maven
 
