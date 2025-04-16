@@ -203,7 +203,7 @@ Nous avons donc la première semaine mis en place:
 Nous nous sommes assurées de leur bon fonctionnement en corrigeant les bug via la branche fix_ci.
 
 Dans notre projet, nous avons une couverture de code 96% (package core)
-Malheuresement, si vous lancez jacoco vous verrez une couverture globale de 83%... le calcul du taux de couverture de code ne prend pas en compte le fait que notre programme principal sert juste à utiliser des méthodes déjà testées ailleurs pour en faire une démonstration. Ainsi, notre programme principal est considéré comme étant testé à 0%, ce fait qui fait descendre le taux de couverture total qui n'est donc pas représentatif.
+Malheureusement, si vous lancez jacoco vous verrez une couverture globale de 83%... le calcul du taux de couverture de code ne prend pas en compte le fait que notre programme principal sert juste à utiliser des méthodes déjà testées ailleurs pour en faire une démonstration. Ainsi, notre programme principal est considéré comme étant testé à 0%, ce fait qui fait descendre le taux de couverture total qui n'est donc pas représentatif.
 De même, les méthodes pour afficher le dataframe ne sont pas testées mais affichent simplement une chaine de caractère renvoyée par une méthode intermédiaire qui a été testée.
 
 Concernant le rendu, vous trouverez dans notre code toutes les fonctionnalitées obligatoires:
