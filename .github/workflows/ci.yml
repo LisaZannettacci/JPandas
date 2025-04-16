@@ -104,4 +104,4 @@ jobs:
       # Étape 4: Pousser l'image Docker sur GitHub Container Registry
       - name: Push Docker image to GitHub Packages
         run: |
-          docker push ghcr.io/${{ github.repository }}/jpandas:latest
+          docker push ghcr.io/lisazannettacci/jpandas:latest
