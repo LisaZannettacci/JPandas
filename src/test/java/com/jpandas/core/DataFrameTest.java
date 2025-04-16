@@ -378,7 +378,7 @@ public class DataFrameTest {
         System.setOut(new PrintStream(output));
     }
 
-    // On s'asssure d'afficher les bonnes valeurs statistiques pour un focntionnement normal
+    // On s'asssure d'afficher les bonnes valeurs statistiques pour un fonctionnement normal
     @Test
     public void testAfficherStatistiquesAvecValeursValides() {
         Map<String, Series<?>> colonnes = new LinkedHashMap<>();
