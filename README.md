@@ -47,7 +47,7 @@ JPandas est une bibliothèque Java inspirée de la bibliothèque Python [Pandas 
 ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
 
 ```sh
-git clone https://github.com/ton-utilisateur/JPandas.git
+git clone https://github.com/LisaZannettacci/JPandas.git
 cd JPandas
 ```
 
@@ -161,7 +161,7 @@ Nous faisons en sorte que le code reste toujours dans un état stable : les test
         - Vérification de la cohérence de la fonctionnalité avec la logique du projet, analyse de la spécification pour analyser la cohérence avec l'implémentation.
         - Relecture orthographique et stylistique de la documentation liée. Plus vérification de l'exhaustivité.
     3) Contrôle de la couverture de tests avec JaCoCo :
-        - Nous exigeons une couverture minimale de 85% sur les nouvelles parties du code.
+        - Nous exigeons une couverture minimale de 90% sur les nouvelles parties du code.
         - Si la couverture est insuffisante, nous demandons l’ajout de tests supplémentaires.
         
 - Déploiement automatique de la documentation :
@@ -188,6 +188,28 @@ Nous avons donc la première semaine mis en place:
 
 Nous nous sommes assurées de leur bon fonctionnement en corrigeant les bug via la branche fix_ci.
 
+Concernant le rendu vous trouverez dans notre code toutes les fonctionnalitées obligatoires:
+- Construction du dataframe
+- Affichage (Dans le fichier `DataFrame.java`: `afficherLignes()`,`afficherPremieresLignes()`, `afficherTout()`, `afficherDernieresLignes`)
+- Sélection (Dans le fichier `DataFrame.java`: `loc()` (par label), `iloc()`(par index), `iloc()` (par index avec slashing), `filter()` (fonctionnalité avancée))
+- Statistiques (Dans le fichier `Series.java`:`moyenne()`, `minimum()`, `maximum()`, `ecartType`)
+
+Et quelques fonctionnalités supplémentaires:
+- Affichage des statistiques: Dans le fichier `DataFrame.java`: `afficherStatistiques()`
+- La possibilité de changer la colonne index par une autre: Dans le fichier `DataFrame.java`: `setIndex()`
+- Des méthodes utilitaires dont nous nous sommes servies dans nos fonctionnalités mais dont l'utilistateur peut avoir besoin...
+- ...
+
+Nous avons également mis en place:
+- un Git
+- utilisé: Maven, Jacoco, JUnit
+- une pipeline GitHub Actions
+- une livraison continue avec docker (via GitHub Packages)
+- un travail collaboratif en définissant un workflow
+- des badges
+- une valorisation de notre bibliothèque via un bot (branche gh-pages) qui génère notre documentation javadoc HTML.
+Vous trouverez toutes les explications de ces différents points dans notre README.md
+
 ### Points à améliorer: 
 Nous avons fait le choix d’écrire :
 
@@ -210,6 +232,12 @@ Nous avons également pris le parti d'avoir une documentation claire, lisisble e
 Pour nous, il est plus important de privilégier la compréhension d'un utilisateur extérieur plutôt que celle des développeurs (qui connaissent le code et qui au pire des cas peuvent lire la doc javadoc).
 
 ## Feedback
+Le projet était vraiment très intéressant !
+Mettre en pratique ce que l’on apprend permet de donner du sens aux slides, de se confronter à la réalité du développement, de rencontrer des erreurs, et surtout, de chercher des solutions concrètes.
+C’est très agréable de coder en suivant de bonnes pratiques, de travailler de façon structurée et organisée… C’est même un peu dommage que ce cours n’ait pas lieu plus tôt dans le cursus ! Il mériterait d’être proposé dès la L2 ou L3, au moment où l’on commence à réaliser des projets en équipe.
+
+Concernant le contenu, la dimension collaborative est parfaite.
+En revanche, serait-il envisageable de laisser un peu plus de liberté sur la bibliothèque à implémenter ? Cela permettrait à chacun(e) de s’orienter vers une bibliothèque qui l'intéresse personnellement, tout en conservant un socle minimum de fonctionnalités à développer pour assurer l’uniformité du projet.
 
 ## Auteurs
 - Lisa ZANNETTACCI  
