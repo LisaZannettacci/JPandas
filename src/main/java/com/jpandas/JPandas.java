@@ -23,7 +23,8 @@ public class JPandas {
         DataFrame df = new DataFrame(colonnes);
 
         // Démonstration de l'affichage :
-        System.out.println("DataFrame complet :");
+		System.out.println("\n==================== AFFICHAGE ====================\n");
+        System.out.println("Affichage du DataFrame complet :");
         df.afficherTout();
         System.out.println("");
 
@@ -39,6 +40,7 @@ public class JPandas {
 
 
 		// Démonstration de la sélection par index
+		System.out.println("\n==================== SELECTION ====================\n");
 		System.out.println("Sélection des lignes d'index 0 et 2 :");
 		DataFrame sousdataframe = df.loc(List.of("0", "2"));
 		sousdataframe.afficherTout();
@@ -62,23 +64,25 @@ public class JPandas {
 		
 
 		// Démonstration des filtres
-		System.out.println("Sélection des lignes dont l'age correspondant est supérieur strictement à 23 :");
+		System.out.println("\n==================== FILTRAGE ====================\n");
+		System.out.println("Sélection des lignes dont l'âge est supérieur strictement à 23 :");
 		sousdataframe = df.filter(ligne -> (int) ligne.get("Age") > 23);
 		sousdataframe.afficherTout();
 		System.out.println("");
 
-		System.out.println("Sélection des lignes dont l'age correspondant est égal à 21 :");
+		System.out.println("Sélection des lignes dont l'âge est égal à 21 :");
 		sousdataframe = df.filter(ligne -> (int) ligne.get("Age") == 21);
 		sousdataframe.afficherTout();
 		System.out.println("");
 
-		System.out.println("Sélection des lignes dont le nom correspondant est Justine :");
+		System.out.println("Sélection des lignes dont le nom est Justine :");
 		sousdataframe = df.filter(ligne -> ligne.get("Nom").equals("Justine"));
 		sousdataframe.afficherTout();
 		System.out.println("");
 
 
 		// Démonstration des statistiques
+		System.out.println("\n==================== STATISTIQUES ====================\n");
 		df.afficherStatistiques("Age");
 		System.out.println("");
 

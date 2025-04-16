@@ -169,10 +169,22 @@ Cette documentation est publiée via la branche gh-pages, ce qui la rend accessi
 ## Description des images Docker/ lien vers le dépôt
 
 ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
-Pour récupérer l'image Docker : docker pull ghcr.io/lisazannettacci/jpandas:latest
-Pour lancer le container : docker run ghcr.io/lisazannettacci/jpandas:latest
 
-L'image Docker fait une démonstration des fonctionnalités que nous avons implémentées pour les dataframes
+L'image Docker que nous mettons à disposition présente une démonstration des fonctionnalités que nous avons implémentées pour les dataframes :
+- Affichage d'un DataFrame (complet, début ou fin)
+- Sélection par index
+- Sélection par plage
+- Filtrage
+- Analyse statistique (moyenne, min, max, écart-type)
+
+Récupérer l'image :
+```sh
+docker pull ghcr.io/lisazannettacci/jpandas:latest
+```
+Lancer le conteneur (exécuter la démonstration) :
+```sh
+docker run ghcr.io/lisazannettacci/jpandas:latest
+```
 
 ## Remarques
 La première chose que nous avons fait est l'initialisation du workflow de GitHub Action.
