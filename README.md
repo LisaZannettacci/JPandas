@@ -170,6 +170,9 @@ Cette documentation est publiée via la branche gh-pages, ce qui la rend accessi
 
 ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
 
+Nous avons ajouté les étapes de construction et de déploiement de l'image Docker à notre pipeline pour déployer l'image dans le Github Packages.
+L'image Docker fait une démonstration des fonctionnalités que nous avons implémentées pour les dataframes
+
 ## Remarques
 La première chose que nous avons fait est l'initialisation du workflow de GitHub Action.
 Selon nous, partir sur des bases solides est essentiel pour pouvoir coder de manière fiable et maintenable.
