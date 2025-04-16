@@ -169,8 +169,9 @@ Cette documentation est publiée via la branche gh-pages, ce qui la rend accessi
 ## Description des images Docker/ lien vers le dépôt
 
 ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
+Pour récupérer l'image Docker : docker pull ghcr.io/lisazannettacci/jpandas:latest
+Pour lancer le container : docker run ghcr.io/lisazannettacci/jpandas:latest
 
-Nous avons ajouté les étapes de construction et de déploiement de l'image Docker à notre pipeline pour déployer l'image dans le Github Packages.
 L'image Docker fait une démonstration des fonctionnalités que nous avons implémentées pour les dataframes
 
 ## Remarques

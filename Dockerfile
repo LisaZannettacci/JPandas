@@ -15,5 +15,5 @@ COPY src /app/src
 RUN apt-get update && apt-get install -y maven  # Installer Maven
 RUN mvn clean package  # Compilation du projet avec Maven
 
-# Etape 6: Exécuter la classe principale (Main.java)
-CMD ["java", "-cp", "target/JPandas-1.0-SNAPSHOT.jar", "com.jpandas.Main"]
+# Etape 6: Exécuter la classe principale (JPandas.java)
+CMD ["java", "-cp", "target/JPandas-1.0-SNAPSHOT.jar", "com.jpandas.JPandas"]
