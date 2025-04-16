@@ -5,7 +5,11 @@ on:
     branches:
       - main
       - fix_ci
+      - fix_readme.md
       - feature_creation_et_affichage_dataframe
+      - feature_selection_dataframe
+      - feature_docker
+      - feature_statistiques_dataframe
   pull_request:
     branches:
       - main
